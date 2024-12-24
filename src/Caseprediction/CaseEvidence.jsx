@@ -1,27 +1,40 @@
 import React from "react";
 import Delete from "../assets/delete.png";
+import Header from "../Header/Header";
+
 function CaseEvidence() {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-teal-800 to-gray-900 text-white font-sans">
+    <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
       {/* Navbar */}
-      <header className="flex justify-between items-center px-8 py-4"></header>
+      <header className="py-4">
+        <div className="max-w-5xl mx-auto px-8 sm:px-6 lg:px-8">
+          <Header />
+        </div>
+      </header>
 
       {/* Case Prediction Section */}
-      <main className="mx-auto max-w-4xl p-8 rounded-lg bg-gradient-to-b from-teal-900 to-teal-700 shadow-lg">
-        <div className="flex justify-between">
-          <h1 className="text-2xl font-semibold mb-4">Case Prediction</h1>
-          <p>Go Back</p>
+      <main className="mx-auto max-w-4xl p-8 rounded-lg bg-gradient-to-b from-teal-800 to-teal-600 shadow-2xl">
+        {/* Title and Go Back */}
+        <div className="flex justify-between items-center mb-6">
+          <h1 className="text-3xl font-bold text-gray-100">Case Prediction</h1>
+          <button className="text-teal-300 hover:text-white font-medium transition">
+            Go Back
+          </button>
         </div>
-        <div className="border border-gray-600 rounded-lg p-6 space-y-4">
-          <div className="flex justify-between">
-            <h2 className="font-medium">Case Evidence Details</h2>
-            <span className="text-green-400">&lt; Evidence No: 01 &gt;</span>
+
+        {/* Case Evidence Details */}
+        <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900">
+          <div className="flex justify-between items-center">
+            <h2 className="text-lg font-medium">Case Evidence Details</h2>
+            <span className="text-teal-300 text-sm">
+              &lt; Evidence No: 01 &gt;
+            </span>
           </div>
 
           {/* Form */}
-          <form className="space-y-4">
+          <form className="space-y-6">
             <select
-              className="w-full px-4 py-2 bg-[rgba(217,217,217,0.2)] text-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
               defaultValue="">
               <option value="" disabled>
                 Select Type Of Evidence Document
@@ -31,27 +44,30 @@ function CaseEvidence() {
             </select>
 
             <textarea
-              className="w-full px-4 py-2 bg-[rgba(217,217,217,0.2)] text-gray-300 placeholder- rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
-              rows="4"
+              className="w-full px-4 py-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              rows="5"
               placeholder="Enter Detailed Evidence"></textarea>
           </form>
 
-          {/* Buttons */}
-          <div className="flex justify-between ">
-            <div className="text-white text-sm">
-              Evidence Count: <span className="font-medium">03</span>
+          {/* Buttons and Evidence Count */}
+          <div className="flex justify-between items-center">
+            <div className="text-sm">
+              Evidence Count:{" "}
+              <span className="font-bold text-teal-300">03</span>
             </div>
-            <div className="flex space-x-2">
-              <button className="h-10 px-4 rounded hover:text-gray-300 flex items-center justify-center">
-                <img src={Delete} alt="delete img" className="h-6 w-4" />
+            <div className="flex space-x-4">
+              <button
+                className="flex items-center justify-center  text-white rounded-full h-10 w-10"
+                title="Delete Evidence">
+                <img src={Delete} alt="Delete Evidence" className="h-6 w-6" />
               </button>
-              <button className="bg-teal-600 h-10 px-4 rounded hover:bg-teal-500">
+              <button className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition">
                 Upload Evidence
               </button>
-              <button className="bg-teal-600 h-10 px-4 rounded hover:bg-teal-500">
+              <button className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition">
                 Save & Add Evidence
               </button>
-              <button className="bg-teal-600 h-10 px-4 rounded hover:bg-teal-500">
+              <button className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition">
                 Continue
               </button>
             </div>

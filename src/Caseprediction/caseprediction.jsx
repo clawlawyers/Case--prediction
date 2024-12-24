@@ -1,10 +1,16 @@
 // App.jsx
 import React from "react";
 import Logo from "../assets/Vector.png";
+import Header from "../Header/Header";
 
 const CasePrediction = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-teal-800 to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-b from-teal-700 to-gray-900 text-white">
+      <header className="py-4">
+        <div className="max-w-5xl mx-auto px-8 sm:px-6 lg:px-8">
+          <Header />
+        </div>
+      </header>
       <main className="flex flex-col items-center text-center py-16">
         <h1 className="text-4xl font-bold mb-6">Case Prediction</h1>
         <p className="text-sm max-w-3xl mb-12">
