@@ -1,5 +1,6 @@
 import React from "react";
 import Delete from "../assets/delete.png";
+import UploadIcon from "../assets/upload.png"; // Add your upload icon path here
 import Header from "../Header/Header";
 
 function CaseEvidence() {
@@ -32,11 +33,21 @@ function CaseEvidence() {
           </div>
 
           {/* Form */}
-          <form className="space-y-6">
+          <form className="relative space-y-6">
             <textarea
-              className="w-full px-4 py-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              style={{
+                background: "rgba(217, 217, 217, 0.2)",
+              }}
               rows="5"
               placeholder="Enter Detailed Testimony"></textarea>
+            {/* Upload Icon */}
+            <button
+              type="button"
+              className="absolute top-[-20px] right-2 bg-teal-600 p-2 rounded-full hover:bg-teal-500 focus:outline-none transition"
+              title="Upload Document">
+              <img src={UploadIcon} alt="Upload" className="h-4 w-4" />
+            </button>
           </form>
 
           {/* Buttons and Evidence Count */}
@@ -47,7 +58,7 @@ function CaseEvidence() {
             </div>
             <div className="flex space-x-4">
               <button
-                className="flex items-center justify-center  text-white rounded-full h-10 w-10"
+                className="flex items-center justify-center text-white rounded-full h-10 w-10"
                 title="Delete Evidence">
                 <img src={Delete} alt="Delete Evidence" className="h-6 w-6" />
               </button>

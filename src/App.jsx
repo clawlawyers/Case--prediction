@@ -1,15 +1,25 @@
-import Header from "./Caseprediction/caseprediction";
-//import Header from "./Caseprediction/CasepredictionLoading";
-//import Header from "./Caseprediction/CasepredictionInput";
-//import Header from "./Caseprediction/CaseEvidence";
-//import Header from "./Caseprediction/CaseTestimonal";
-//import Header from "./Header/Header";
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import Caseprediction from "./Caseprediction/caseprediction";
+import CasepredictionLoading from "./Caseprediction/CasepredictionLoading";
+import CasepredictionInput from "./Caseprediction/CasepredictionInput";
+import CaseEvidence from "./Caseprediction/CaseEvidence";
+import CaseTestimonal from "./Caseprediction/CaseTestimonal";
 
 function App() {
   return (
-    <>
-      <Header />
-    </>
+    <Router>
+      {/* Header component always visible */}
+
+      {/* Routes for different pages */}
+      <Routes>
+        <Route path="/" element={<Caseprediction />} />
+        <Route path="/loading" element={<CasepredictionLoading />} />
+        <Route path="/input" element={<CasepredictionInput />} />
+        <Route path="/evidence" element={<CaseEvidence />} />
+        <Route path="/testimonial" element={<CaseTestimonal />} />
+      </Routes>
+    </Router>
   );
 }
 

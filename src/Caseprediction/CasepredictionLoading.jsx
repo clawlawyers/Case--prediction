@@ -15,12 +15,12 @@ const CaseLoading = () => {
       {/* Main Content */}
       <main className="flex flex-col items-center justify-center text-center ">
         {/* Illustration */}
-        <div className="mb-8">
-          <img src={LoadingImg} alt="Illustration" className="h-52 w-52" />
+        <div className="mb-2">
+          <img src={LoadingImg} alt="Illustration" className="h-56 w-56" />
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl font-bold mb-4">Case Prediction Loading</h1>
+        <h1 className="text-[32px] font-bold mb-8">Case Prediction Loading</h1>
 
         {/* Subtitle */}
         <p className="text-sm max-w-lg">

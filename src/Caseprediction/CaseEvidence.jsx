@@ -1,6 +1,7 @@
 import React from "react";
 import Delete from "../assets/delete.png";
 import Header from "../Header/Header";
+import UploadIcon from "../assets/upload.png"; // Add your upload icon path here
 
 function CaseEvidence() {
   return (
@@ -33,20 +34,45 @@ function CaseEvidence() {
 
           {/* Form */}
           <form className="space-y-6">
+            {/* Select Dropdown */}
             <select
-              className="w-full px-4 py-2 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              className="w-full px-4 py-2 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+              style={{
+                background: "rgba(217, 217, 217, 0.2)",
+              }}
               defaultValue="">
               <option value="" disabled>
                 Select Type Of Evidence Document
               </option>
-              <option value="Document 1">Document 1</option>
-              <option value="Document 2">Document 2</option>
+
+              <option
+                className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
+                value="Document 1">
+                Document 1
+              </option>
+              <option
+                className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
+                value="Document 2">
+                Document 2
+              </option>
             </select>
 
-            <textarea
-              className="w-full px-4 py-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-              rows="5"
-              placeholder="Enter Detailed Evidence"></textarea>
+            {/* Textarea with Upload Icon */}
+            <div className="relative">
+              <textarea
+                className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                style={{
+                  background: "rgba(217, 217, 217, 0.2)",
+                }}
+                rows="5"
+                placeholder="Enter Detailed Evidence"></textarea>
+              <button
+                type="button"
+                className="absolute top-2 right-3 bg-teal-600 p-2 rounded-full hover:bg-teal-500 focus:outline-none transition"
+                title="Upload Document">
+                <img src={UploadIcon} alt="Upload" className="h-4 w-4" />
+              </button>
+            </div>
           </form>
 
           {/* Buttons and Evidence Count */}
