@@ -2,6 +2,7 @@
 import React from "react";
 import Logo from "../assets/Vector.png";
 import Header from "../Header/Header";
+import { Link } from "react-router-dom";
 
 const CasePrediction = () => {
   return (
@@ -56,7 +57,7 @@ const CasePrediction = () => {
         </div>
 
         <button className="border hover:bg-gray-400 hover:opacity-95 border-white text-white px-8 py-2 rounded-lg">
-          Analyze Your Legal Case
+          <Link to="/input">Analyze Your Legal Case</Link>
         </button>
       </main>
     </div>

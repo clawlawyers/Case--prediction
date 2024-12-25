@@ -9,9 +9,6 @@ import CaseTestimonal from "./Caseprediction/CaseTestimonal";
 function App() {
   return (
     <Router>
-      {/* Header component always visible */}
-
-      {/* Routes for different pages */}
       <Routes>
         <Route path="/" element={<Caseprediction />} />
         <Route path="/loading" element={<CasepredictionLoading />} />

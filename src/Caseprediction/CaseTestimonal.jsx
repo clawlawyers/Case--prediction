@@ -3,7 +3,7 @@ import Delete from "../assets/delete.png";
 import UploadIcon from "../assets/upload.png"; // Add your upload icon path here
 import Header from "../Header/Header";
 
-function CaseEvidence() {
+function CaseTestimonal() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
       {/* Navbar */}
@@ -79,4 +79,4 @@ function CaseEvidence() {
   );
 }
 
-export default CaseEvidence;
+export default CaseTestimonal;

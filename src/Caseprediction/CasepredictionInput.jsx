@@ -1,11 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../Header/Header";
 
 const CasePredictionInput = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false); // State for dialog visibility
+
+  const handleContinue = () => {
+    setIsDialogOpen(true); // Open the dialog box
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault(); // Prevent default form submission
+    console.log("Form submitted"); // Debugging log
+  };
+
   return (
-    <div className="bg-gradient-to-b from-teal-900 to-teal-700 min-h-screen  text-white font-['Plus Jakarta Sans']">
+    <div className="bg-gradient-to-b from-teal-900 to-teal-700 min-h-screen text-white font-['Plus Jakarta Sans']">
       {/* Fixed Header */}
-      <header className="">
+      <header>
         <div className="max-w-5xl mx-auto px-8 py-4 sm:px-6 lg:px-8">
           <Header />
         </div>
@@ -25,7 +36,7 @@ const CasePredictionInput = () => {
             </p>
 
             {/* Form */}
-            <form>
+            <form onSubmit={handleSubmit}>
               {/* Dropdowns */}
               <div className="grid grid-cols-1 gap-4 mb-6">
                 <select
@@ -87,7 +98,7 @@ const CasePredictionInput = () => {
 
                 <div className="flex-1">
                   <select
-                    className=" text-white px-4 py-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    className="text-white px-4 py-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                     style={{
                       background: "rgba(217, 217, 217, 0.2)",
                     }}
@@ -121,43 +132,54 @@ const CasePredictionInput = () => {
               <div className="flex w-full justify-between mb-6">
                 <button
                   type="button"
-                  className="flex-1 px-4 py-2 rounded text-white hover:opacity-90 transition mr-2"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #417476 0%, #66b799 100%)",
-                    border: "none",
-                  }}>
-                  + Add Evidence
-                </button>
-
-                <button
-                  type="button"
-                  className="flex-1 px-4 py-2 rounded text-white hover:opacity-90 transition mr-2"
-                  style={{
-                    background:
-                      "linear-gradient(90deg, #417476 0%, #66b799 100%)",
-                    border: "none",
-                  }}>
-                  + Add Testimony
+                  className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg">
+                  Upload Case Document
                 </button>
               </div>
 
               {/* Analyze Case Button */}
               <button
-                type="submit"
-                className=" w-full hover:text-black py-3 rounded hover:bg-gray-300 hover:opacity-90 transition relative overflow-hidden"
+                type="button"
+                className="w-full hover:text-black py-3 rounded hover:bg-gray-300 hover:opacity-90 transition relative overflow-hidden"
                 style={{
                   border: "1px solid transparent",
                   borderImageSource:
                     "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%)",
                   borderImageSlice: 1,
-                }}>
-                Analyze Case
+                }}
+                onClick={handleContinue}>
+                Continue
               </button>
             </form>
           </div>
         </div>
       </div>
+
+      {/* Dialog Box */}
+      {isDialogOpen && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-6 w-11/12 max-w-md text-center">
+            <h2 className="text-2xl font-bold text-teal-700 mb-4">
+              Upload Documents
+            </h2>
+            <div className="mb-4 flex justify-between">
+              <p className="text-black">Total Evidence Uploaded: 00</p>
+              <button className="bg-teal-600 text-white px-4 rounded-md hover:bg-teal-700 mt-2">
+                Add Evidence
+              </button>
+            </div>
+            <div className="mb-4 flex justify-between ">
+              <p className="text-black">Total Testimony Uploaded: 00</p>
+              <button className="bg-teal-600 text-white px-4  rounded-md hover:bg-teal-700 mt-2">
+                Add Testimony
+              </button>
+            </div>
+            <button className="w-full bg-teal-700 text-white py-2 rounded-md hover:bg-teal-800 mt-4">
+              Continue
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

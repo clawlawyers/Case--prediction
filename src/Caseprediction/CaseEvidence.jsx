@@ -1,21 +1,16 @@
 import React from "react";
 import Delete from "../assets/delete.png";
 import Header from "../Header/Header";
-import UploadIcon from "../assets/upload.png"; // Add your upload icon path here
-
+import UploadIcon from "../assets/upload.png";
 function CaseEvidence() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
-      {/* Navbar */}
       <header className="py-4">
         <div className="max-w-5xl mx-auto px-8 sm:px-6 lg:px-8">
           <Header />
         </div>
       </header>
-
-      {/* Case Prediction Section */}
       <main className="mx-auto max-w-4xl p-8 rounded-lg bg-gradient-to-b from-teal-800 to-teal-600 shadow-2xl">
-        {/* Title and Go Back */}
         <div className="flex justify-between items-center mb-6">
           <h1 className="text-3xl font-bold text-gray-100">Case Prediction</h1>
           <button className="text-teal-300 hover:text-white font-medium transition">
@@ -32,7 +27,6 @@ function CaseEvidence() {
             </span>
           </div>
 
-          {/* Form */}
           <form className="space-y-6">
             {/* Select Dropdown */}
             <select
@@ -57,7 +51,6 @@ function CaseEvidence() {
               </option>
             </select>
 
-            {/* Textarea with Upload Icon */}
             <div className="relative">
               <textarea
                 className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
@@ -75,7 +68,6 @@ function CaseEvidence() {
             </div>
           </form>
 
-          {/* Buttons and Evidence Count */}
           <div className="flex justify-between items-center">
             <div className="text-sm">
               Evidence Count:{" "}
