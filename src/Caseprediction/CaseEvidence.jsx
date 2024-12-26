@@ -3,6 +3,8 @@ import Delete from "../assets/delete.png";
 import Header from "../Header/Header";
 import UploadIcon from "../assets/upload.png";
 function CaseEvidence() {
+  const [evidence, setEvidence] = useState("");
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
       <header className="py-4">
