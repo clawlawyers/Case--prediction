@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
 import { Link } from "react-router-dom";
 import { NODE_API_ENDPOINT } from "../utils/utils";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setuserId } from "../features/AuthDetails";
 const CasePredictionInput = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -11,6 +11,10 @@ const CasePredictionInput = () => {
   const [court, setCourt] = useState("");
   const [caseDetails, setCaseDetails] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+
+  const userid = useSelector((state) => state.auth.userId);
+
+  console.log(userid);
 
   const supremeCourt = ["Supreme Court of India"];
 
@@ -205,31 +209,43 @@ const CasePredictionInput = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Prepare form data for the API
-    const formData = new FormData();
-    formData.append("caseType", caseType);
-    formData.append("jurisdiction", jurisdiction);
-    formData.append("court", court);
-    formData.append("caseDetails", caseDetails);
-    if (selectedFile) {
-      formData.append("document", selectedFile);
-    }
+    // console.log(caseDetails, caseType, jurisdiction);
+    // // Prepare form data for the API
+    // const formData = new FormData();
+    // formData.append("caseType", caseType);
+    // formData.append("jurisdiction", jurisdiction);
+    // formData.append("court", court);
+    // formData.append("caseDetails", caseDetails);
+    // if (selectedFile) {
+    //   formData.append("document", selectedFile);
+    // }
+
+    // console.log(formData);
 
     try {
       // API call
       const response = await fetch(
-        `${NODE_API_ENDPOINT}/casePrediction/user_id`,
+        `${NODE_API_ENDPOINT}/casePrediction/api/case_details`,
         {
           method: "POST",
-          body: formData,
+          body: JSON.stringify({
+            user_id: userid,
+            case_type: caseType,
+            jurisdiction: jurisdiction,
+            case_overview: caseDetails,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
         }
       );
 
       if (response.ok) {
         const data = await response.json();
         console.log("Success:", data);
-        console.log(formData);
+        // console.log(formData);
         alert("Case submitted successfully!");
+        handleContinue();
       } else {
         console.error("Error:", response.statusText);
         alert("Failed to submit the case. Please try again.");
@@ -272,7 +288,8 @@ const CasePredictionInput = () => {
                     background: "rgba(217, 217, 217, 0.2)",
                   }}
                   value={caseType}
-                  onChange={(e) => setCaseType(e.target.value)}>
+                  onChange={(e) => setCaseType(e.target.value)}
+                >
                   <option value="" disabled>
                     Select Your Case Type
                   </option>
@@ -327,7 +344,8 @@ const CasePredictionInput = () => {
                     value={court}
                     onChange={(e) =>
                       setCourt(e.target.value === "" ? null : e.target.value)
-                    }>
+                    }
+                  >
                     <option value="">Select Your Court</option>
                     {getCourtsByJurisdiction().map((courtName, index) => (
                       <option key={index} value={courtName}>
@@ -347,13 +365,15 @@ const CasePredictionInput = () => {
                 rows="4"
                 placeholder="Enter Your Detailed Case Overview"
                 value={caseDetails}
-                onChange={(e) => setCaseDetails(e.target.value)}></textarea>
+                onChange={(e) => setCaseDetails(e.target.value)}
+              ></textarea>
 
               {/* File Upload */}
               <div className="flex w-full justify-between mb-6">
                 <label
                   htmlFor="fileUpload"
-                  className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white">
+                  className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white"
+                >
                   Upload Case Document
                 </label>
                 <input
@@ -373,7 +393,8 @@ const CasePredictionInput = () => {
                   borderImageSource:
                     "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%)",
                   borderImageSlice: 1,
-                }}>
+                }}
+              >
                 Continue
               </button>
             </form>
@@ -388,6 +409,18 @@ const CasePredictionInput = () => {
             <h2 className="text-2xl font-bold text-teal-700 mb-4">
               Upload Documents
             </h2>
+            <div className="mb-4 flex justify-between">
+              <p className="text-black">Total Evidence Uploaded: 00</p>
+              <button className="bg-teal-600 text-white px-4 rounded-md hover:bg-teal-700 mt-2">
+                <Link to="/evidence">Add Evidence</Link>
+              </button>
+            </div>
+            <div className="mb-4 flex justify-between ">
+              <p className="text-black">Total Testimony Uploaded: 00</p>
+              <button className="bg-teal-600 text-white px-4  rounded-md hover:bg-teal-700 mt-2">
+                <Link to="/testimonial">Add Testimony</Link>
+              </button>
+            </div>
             <button className="w-full bg-teal-700 text-white py-2 rounded-md hover:bg-teal-800 mt-4">
               Continue
             </button>

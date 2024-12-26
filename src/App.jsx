@@ -5,7 +5,6 @@ import CasepredictionLoading from "./Caseprediction/CasepredictionLoading";
 import CasepredictionInput from "./Caseprediction/CasepredictionInput";
 import CaseEvidence from "./Caseprediction/CaseEvidence";
 import CaseTestimonal from "./Caseprediction/CaseTestimonal";
-import { NODE_API_ENDPOINT } from "./utils/utils";
 import { Provider } from "react-redux";
 
 import store from "./store";

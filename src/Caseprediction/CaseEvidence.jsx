@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import Delete from "../assets/delete.png";
 import Header from "../Header/Header";
 import UploadIcon from "../assets/upload.png";
 function CaseEvidence() {
-  const [evidence, setEvidence] = useState("");
+  const [evidenceType, setEvidenceType] = useState("");
+  const [evidenceDetails, setEvidenceDetails] = useState("");
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
@@ -36,20 +37,32 @@ function CaseEvidence() {
               style={{
                 background: "rgba(217, 217, 217, 0.2)",
               }}
-              defaultValue="">
+              value={evidenceType}
+              onChange={(e) =>
+                setEvidenceType(e.target.value === "" ? null : e.target.value)
+              }
+            >
               <option value="" disabled>
                 Select Type Of Evidence Document
               </option>
 
               <option
                 className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
-                value="Document 1">
-                Document 1
+                value="circumstantial evidence"
+              >
+                Circumstantial Evidence
               </option>
               <option
                 className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
-                value="Document 2">
-                Document 2
+                value="documentary evidence"
+              >
+                Documentary Evidence
+              </option>
+              <option
+                className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
+                value="physical evidence"
+              >
+                Physical Evidence
               </option>
             </select>
 
@@ -60,11 +73,15 @@ function CaseEvidence() {
                   background: "rgba(217, 217, 217, 0.2)",
                 }}
                 rows="5"
-                placeholder="Enter Detailed Evidence"></textarea>
+                placeholder="Enter Detailed Evidence"
+                value={evidenceDetails}
+                onChange={(e) => setEvidenceDetails(e.target.value)}
+              ></textarea>
               <button
                 type="button"
                 className="absolute top-2 right-3 bg-teal-600 p-2 rounded-full hover:bg-teal-500 focus:outline-none transition"
-                title="Upload Document">
+                title="Upload Document"
+              >
                 <img src={UploadIcon} alt="Upload" className="h-4 w-4" />
               </button>
             </div>
@@ -78,7 +95,8 @@ function CaseEvidence() {
             <div className="flex space-x-4">
               <button
                 className="flex items-center justify-center  text-white rounded-full h-10 w-10"
-                title="Delete Evidence">
+                title="Delete Evidence"
+              >
                 <img src={Delete} alt="Delete Evidence" className="h-6 w-6" />
               </button>
               <button className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition">

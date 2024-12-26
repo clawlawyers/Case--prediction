@@ -6,8 +6,8 @@ export const userSlice = createSlice({
     userId: null,
   },
   reducers: {
-    setuserId(state) {
-      state.userId = true;
+    setuserId(state, action) {
+      state.userId = action.payload;
     },
   },
 });
