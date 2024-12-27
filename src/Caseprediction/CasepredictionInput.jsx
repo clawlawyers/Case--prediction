@@ -1,20 +1,29 @@
 import React, { useState, useEffect } from "react";
 import Header from "../Header/Header";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { NODE_API_ENDPOINT } from "../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserId } from "../features/AuthDetails";
+import { openDialog } from "../features/Casedetails";
+import { Alert, CircularProgress } from "@mui/material";
 const CasePredictionInput = () => {
-  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [caseType, setCaseType] = useState("");
   const [jurisdiction, setJurisdiction] = useState("");
   const [court, setCourt] = useState("");
   const [caseDetails, setCaseDetails] = useState("");
   const [selectedFile, setSelectedFile] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [FinalLoading, setFinalLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const userid = useSelector((state) => state.auth.userId);
-
-  console.log(userid);
+  const isDialogOpen = useSelector((state) => state.case.isDialogOpen);
+  const FinalEvidence = useSelector((state) => state.evidence.EvidenceDetail);
+  const FinalTestimony = useSelector(
+    (state) => state.testimony.TestimonyDetail
+  );
 
   const supremeCourt = ["Supreme Court of India"];
 
@@ -183,16 +192,30 @@ const CasePredictionInput = () => {
         console.error("Error in API call:", error);
       }
     };
-
-    fetchData();
+    if (!userid) {
+      fetchData();
+    }
   }, []);
 
   const handleContinue = () => {
-    setIsDialogOpen(true);
+    dispatch(openDialog(true));
   };
 
   const handleFileChange = (e) => {
-    setSelectedFile(e.target.files[0]);
+    // Get the selected file
+    const file = e.target.files[0];
+
+    if (file) {
+      // Extract file extension (e.g., ".pdf", ".docx", ".jpg")
+      const fileExtension = file.name.split(".").pop();
+      const renamedFile = new File([file], userid + "." + fileExtension, {
+        type: file.type,
+      });
+
+      // Update the state to store the renamed file
+      setSelectedFile(renamedFile);
+      console.log("File renamed to:", renamedFile);
+    }
   };
 
   const getCourtsByJurisdiction = () => {
@@ -209,21 +232,9 @@ const CasePredictionInput = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // console.log(caseDetails, caseType, jurisdiction);
-    // // Prepare form data for the API
-    // const formData = new FormData();
-    // formData.append("caseType", caseType);
-    // formData.append("jurisdiction", jurisdiction);
-    // formData.append("court", court);
-    // formData.append("caseDetails", caseDetails);
-    // if (selectedFile) {
-    //   formData.append("document", selectedFile);
-    // }
-
-    // console.log(formData);
-
     try {
       // API call
+      setLoading(true);
       const response = await fetch(
         `${NODE_API_ENDPOINT}/casePrediction/api/case_details`,
         {
@@ -240,19 +251,113 @@ const CasePredictionInput = () => {
         }
       );
 
-      if (response.ok) {
-        const data = await response.json();
-        console.log("Success:", data);
-        // console.log(formData);
-        alert("Case submitted successfully!");
-        handleContinue();
-      } else {
+      if (!response.ok) {
+        setLoading(false);
         console.error("Error:", response.statusText);
         alert("Failed to submit the case. Please try again.");
+        return;
       }
+      const data = await response.json();
+      console.log("Success:", data);
+      // console.log(formData);
+      if (selectedFile) {
+        const formData = new FormData();
+        formData.append("file", selectedFile);
+
+        const uploadResponse = await fetch(
+          `${NODE_API_ENDPOINT}/casePrediction/api/case_document`,
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
+        if (!uploadResponse.ok) {
+          setLoading(false);
+          console.error("Error uploading file:", uploadResponse.statusText);
+          alert("Failed to upload the file. Please try again.");
+          return;
+        }
+        console.log("File uploaded successfully!");
+        setSelectedFile(null);
+        setLoading(false);
+        handleContinue();
+      }
+      handleContinue();
+      setLoading(false);
     } catch (error) {
+      setLoading(false);
+
       console.error("Error:", error);
       alert("An error occurred while submitting the case.");
+    }
+  };
+
+  const concatenateStringOfArrays = (arr) => {
+    let result = "";
+    for (let i = 0; i < arr.length; i++) {
+      result += arr[i];
+    }
+    return result;
+  };
+
+  const handleContinueToPrediction = async () => {
+    setFinalLoading(true);
+
+    const evidenceDetails = concatenateStringOfArrays(FinalEvidence);
+    try {
+      const pushEvidenceToML = await fetch(
+        `${NODE_API_ENDPOINT}/casePrediction/api/evidence_details`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            user_id: userid,
+            evidence: evidenceDetails,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      if (!pushEvidenceToML.ok) {
+        setFinalLoading(false);
+        console.error(
+          "Error pushing evidence to ML:",
+          pushEvidenceToML.statusText
+        );
+        alert("Failed to push evidence to ML. Please try again.");
+        return;
+      }
+      const witnessDetails = concatenateStringOfArrays(FinalTestimony);
+      const pushTestimonyToML = await fetch(
+        `${NODE_API_ENDPOINT}/casePrediction/api/witness_details`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            user_id: userid,
+            witness_statement: witnessDetails,
+          }),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (!pushTestimonyToML.ok) {
+        setFinalLoading(false);
+        console.error(
+          "Error pushing testimony to ML:",
+          pushTestimonyToML.statusText
+        );
+        alert("Failed to push testimony to ML. Please try again.");
+        return;
+      }
+      console.log("Evidence and testimony pushed to ML successfully!");
+      setFinalLoading(false);
+      navigate("/loading");
+    } catch (error) {
+      setFinalLoading(false);
+      console.error("Error:", error);
+      alert("An error occurred while predicting the case outcome.");
     }
   };
 
@@ -370,20 +475,30 @@ const CasePredictionInput = () => {
 
               {/* File Upload */}
               <div className="flex w-full justify-between mb-6">
-                <label
-                  htmlFor="fileUpload"
-                  className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white"
-                >
-                  Upload Case Document
-                </label>
-                <input
-                  id="fileUpload"
-                  type="file"
-                  className="hidden"
-                  onChange={handleFileChange}
-                />
+                {/* Conditional Rendering */}
+                {!selectedFile ? (
+                  <>
+                    {/* Upload Button */}
+                    <label
+                      htmlFor="fileUpload"
+                      className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white"
+                    >
+                      Upload Case Document
+                    </label>
+                    <input
+                      id="fileUpload"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
+                    />
+                  </>
+                ) : (
+                  // If file is uploaded, show the success alert
+                  <Alert severity="success" className="w-full mt-2">
+                    File uploaded successfully!
+                  </Alert>
+                )}
               </div>
-
               {/* Analyze Case Button */}
               <button
                 type="submit"
@@ -395,7 +510,11 @@ const CasePredictionInput = () => {
                   borderImageSlice: 1,
                 }}
               >
-                Continue
+                {loading ? (
+                  <CircularProgress size={24} sx={{ color: "white" }} />
+                ) : (
+                  "Continue"
+                )}
               </button>
             </form>
           </div>
@@ -410,19 +529,30 @@ const CasePredictionInput = () => {
               Upload Documents
             </h2>
             <div className="mb-4 flex justify-between">
-              <p className="text-black">Total Evidence Uploaded: 00</p>
+              <p className="text-black">
+                Total Evidence Uploaded: {FinalEvidence?.length}
+              </p>
               <button className="bg-teal-600 text-white px-4 rounded-md hover:bg-teal-700 mt-2">
                 <Link to="/evidence">Add Evidence</Link>
               </button>
             </div>
             <div className="mb-4 flex justify-between ">
-              <p className="text-black">Total Testimony Uploaded: 00</p>
+              <p className="text-black">
+                Total Testimony Uploaded: {FinalTestimony?.length}
+              </p>
               <button className="bg-teal-600 text-white px-4  rounded-md hover:bg-teal-700 mt-2">
                 <Link to="/testimonial">Add Testimony</Link>
               </button>
             </div>
-            <button className="w-full bg-teal-700 text-white py-2 rounded-md hover:bg-teal-800 mt-4">
-              Continue
+            <button
+              className="w-full bg-teal-700 text-white py-2 rounded-md hover:bg-teal-800 mt-4"
+              onClick={handleContinueToPrediction}
+            >
+              {FinalLoading ? (
+                <CircularProgress size={24} sx={{ color: "white" }} />
+              ) : (
+                "Continue"
+              )}
             </button>
           </div>
         </div>

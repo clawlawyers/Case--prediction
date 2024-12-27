@@ -6,6 +6,7 @@ export const caseDetailSlice = createSlice({
     caseType: null,
     Jurisdiction: null,
     caseOverview: null,
+    isDialogOpen: false,
   },
 
   reducers: {
@@ -19,9 +20,16 @@ export const caseDetailSlice = createSlice({
       state.Jurisdiction = null;
       state.caseOverview = null;
     },
+    openDialog(state, action) {
+      state.isDialogOpen = true;
+    },
+    closeDialog(state, action) {
+      state.isDialogOpen = false;
+    },
   },
 });
 
-export const { setCase, resetCase } = caseDetailSlice.actions;
+export const { setCase, resetCase, openDialog, closeDialog } =
+  caseDetailSlice.actions;
 
 export default caseDetailSlice.reducer;

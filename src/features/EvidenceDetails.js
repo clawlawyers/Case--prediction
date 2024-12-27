@@ -8,7 +8,8 @@ export const evidenceDetailSlice = createSlice({
 
   reducers: {
     setEvidence(state, action) {
-      state.EvidenceDetail = action.payload.EvidenceDetail;
+      console.log(action.payload);
+      state.EvidenceDetail = action.payload;
     },
     resetEvidence(state, action) {
       state.EvidenceDetail = null;
