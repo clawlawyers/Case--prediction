@@ -1,8 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import LoadingImg from "../assets/Analysisdigitalmarketing.png";
 import Header from "../Header/Header";
+import { useNavigate } from "react-router-dom";
 
 const CaseLoading = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    navigate("/analyze");
+  }, []);
   return (
     <div className="bg-gradient-to-b from-teal-900 to-teal-700 min-h-screen text-white font-['Plus Jakarta Sans']">
       {/* Fixed Header */}

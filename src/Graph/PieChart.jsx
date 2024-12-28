@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { CircularProgress } from "@mui/material";
 // import { ChartDataLabels } from "chartjs-plugin-datalabels";
 
 ChartJS.register(ArcElement, Tooltip, Legend); // Register the plugin
 
-const PieChart = () => {
+const PieChart = ({ Value }) => {
   const data = {
     labels: [
       "Documentary Evidence",
@@ -15,7 +16,7 @@ const PieChart = () => {
     ],
     datasets: [
       {
-        data: [30, 80, 70, 90], // Corresponds to the percentages
+        data: Value, // Corresponds to the percentages
         backgroundColor: ["#22c55e", "#0ea5e9", "#0d9488", "#00D88A"], // Colors from the image
         borderWidth: 1,
       },
@@ -58,7 +59,13 @@ const PieChart = () => {
     <div className="m-auto">
       {" "}
       {/* Set explicit width and height */}
-      <Pie data={data} options={options} />
+      {Value.length === 0 ? (
+        <div className="grid place-content-center m-10">
+          <CircularProgress size={50} sx={{ color: "white" }} />
+        </div>
+      ) : (
+        <Pie data={data} options={options} />
+      )}
     </div>
   );
 };

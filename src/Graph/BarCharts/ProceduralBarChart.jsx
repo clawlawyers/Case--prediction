@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,16 +8,19 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { NODE_API_ENDPOINT } from "../../utils/utils";
+import { useSelector } from "react-redux";
+import { CircularProgress } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const ProceduralBarChart = () => {
+const ProceduralBarChart = ({ Value }) => {
   const data = {
     labels: ["Jurisdiction", "Filing Requirements", "Statutory Notices"], // X-axis labels
     datasets: [
       {
         label: "Compliance(%)",
-        data: [100, 90, 95], // Data points for the bars
+        data: Value, // Data points for the bars
         backgroundColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Bar colors
         borderColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Border colors
         borderWidth: 1,
@@ -77,7 +80,13 @@ const ProceduralBarChart = () => {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <Bar data={data} options={options} />
+      {Value.length === 0 ? (
+        <div className="grid place-content-center m-10">
+          <CircularProgress size={50} sx={{ color: "white" }} />
+        </div>
+      ) : (
+        <Bar data={data} options={options} />
+      )}
     </div>
   );
 };

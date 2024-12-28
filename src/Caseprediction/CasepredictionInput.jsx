@@ -232,6 +232,11 @@ const CasePredictionInput = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (FinalEvidence.length === 0 && FinalTestimony === 0) {
+      alert("Please select at least one evidence or testimony");
+      return;
+    }
+
     try {
       // API call
       setLoading(true);
@@ -353,7 +358,7 @@ const CasePredictionInput = () => {
       }
       console.log("Evidence and testimony pushed to ML successfully!");
       setFinalLoading(false);
-      navigate("/loading");
+      navigate("/analyze");
     } catch (error) {
       setFinalLoading(false);
       console.error("Error:", error);

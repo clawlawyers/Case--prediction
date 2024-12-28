@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,16 +8,17 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { CircularProgress } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
-const LegalBarChart = () => {
+const LegalBarChart = ({ Value }) => {
   const data = {
     labels: ["Statute Clarity", "Factual Nuances", "Legal Interpretation"], // X-axis labels
     datasets: [
       {
         label: "Score",
-        data: [80, 75, 80], // Data points for the bars
+        data: Value, // Data points for the bars
         backgroundColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Bar colors
         borderColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Border colors
         borderWidth: 1,
@@ -77,7 +78,13 @@ const LegalBarChart = () => {
 
   return (
     <div className="w-full h-full flex items-center justify-center">
-      <Bar data={data} options={options} />
+      {Value.length === 0 ? (
+        <div className="grid place-content-center m-10">
+          <CircularProgress size={50} sx={{ color: "white" }} />
+        </div>
+      ) : (
+        <Bar data={data} options={options} />
+      )}
     </div>
   );
 };

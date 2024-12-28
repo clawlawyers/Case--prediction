@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,6 +9,9 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
+import { NODE_API_ENDPOINT } from "../utils/utils";
+import { useSelector } from "react-redux";
+import { CircularProgress } from "@mui/material";
 
 // Register Chart.js modules
 ChartJS.register(
@@ -20,7 +23,7 @@ ChartJS.register(
   Legend
 );
 
-const CombinedGraph = () => {
+const CombinedGraph = ({ Value }) => {
   const data = {
     labels: [
       "Filing Costs",
@@ -31,7 +34,7 @@ const CombinedGraph = () => {
     datasets: [
       {
         label: "Amount",
-        data: [10000, 500000, -100000, 1000000],
+        data: Value,
         backgroundColor: ["#1ABAEF", "#006C81", "#004D63", "#00D88A"],
       },
     ],
@@ -85,7 +88,17 @@ const CombinedGraph = () => {
     },
   };
 
-  return <Bar className="" data={data} options={options} />;
+  return (
+    <>
+      {Value.length === 0 ? (
+        <div className="grid place-content-center m-10">
+          <CircularProgress size={50} sx={{ color: "white" }} />
+        </div>
+      ) : (
+        <Bar className="" data={data} options={options} />
+      )}
+    </>
+  );
 };
 
 export default CombinedGraph;
