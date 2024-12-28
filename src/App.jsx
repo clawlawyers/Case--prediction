@@ -5,6 +5,7 @@ import CasepredictionLoading from "./Caseprediction/CasepredictionLoading";
 import CasepredictionInput from "./Caseprediction/CasepredictionInput";
 import CaseEvidence from "./Caseprediction/CaseEvidence";
 import CaseTestimonal from "./Caseprediction/CaseTestimonal";
+import AnalyzeComponents from "./Graph/AnalyzeComponents";
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/input" element={<CasepredictionInput />} />
         <Route path="/evidence" element={<CaseEvidence />} />
         <Route path="/testimonial" element={<CaseTestimonal />} />
+        <Route path="/analyze" element={<AnalyzeComponents />} />
       </Routes>
     </Router>
   );
