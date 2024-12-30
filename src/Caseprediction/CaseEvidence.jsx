@@ -3,12 +3,14 @@ import Delete from "../assets/delete.png";
 import Header from "../Header/Header";
 import UploadIcon from "../assets/upload.png";
 import { useDispatch, useSelector } from "react-redux";
-import { setEvidence } from "../features/EvidenceDetails";
+import { deleteEvidence, setEvidence } from "../features/EvidenceDetails";
 import { openDialog } from "../features/Casedetails";
 import { useNavigate } from "react-router-dom";
 import { NODE_API_ENDPOINT } from "../utils/utils";
 
-import { CircularProgress } from "@mui/material";
+import { CircularProgress, Modal } from "@mui/material";
+import toast from "react-hot-toast";
+import CaseEvidenceModal from "./CaseEvidenceModal";
 
 function CaseEvidence() {
   const dispatch = useDispatch();
@@ -20,17 +22,28 @@ function CaseEvidence() {
   const [evidenceType, setEvidenceType] = useState("");
   const [evidenceDetails, setEvidenceDetails] = useState("");
   const [loading, setLoading] = useState(false);
+  const [addNewEvidence, setAddNewEvidence] = useState(false);
+  const [openEditDialog, setOpenEditDialog] = useState(false);
+  const [editDialogDetails, setEditDialogDetails] = useState("");
 
-  const handleSaveAndAddEvidence = async () => {
-    const newEvidence = `${evidenceType} : \n ${evidenceDetails}`;
+  const handleSaveAndAddEvidence = (e) => {
+    e.preventDefault();
+    // const newEvidence = `${evidenceType} : \n ${evidenceDetails}`;
+    const newEvidence = {
+      type: evidenceType,
+      details: evidenceDetails,
+    };
     dispatch(setEvidence([...FinalEvidence, newEvidence]));
     alert("Evidence saved and added successfully!");
     setEvidenceType("");
     setEvidenceDetails("");
+    setAddNewEvidence(false);
+    handleContinue(e);
   };
   console.log("Final Evidence:", FinalEvidence);
 
-  const handleContinue = () => {
+  const handleContinue = (e) => {
+    e.preventDefault();
     // Add your code here to navigate to the next page or perform necessary actions
     // Example: history.push("/next-page");
     dispatch(openDialog(true));
@@ -102,6 +115,23 @@ function CaseEvidence() {
     }
   };
 
+  const handleAddEvidence = () => {
+    if (addNewEvidence) {
+      toast.error("Save the current evidence first!");
+    } else {
+      setAddNewEvidence(true);
+    }
+  };
+
+  const handleEditEvidence = (index) => {
+    setOpenEditDialog(true);
+    setEditDialogDetails({ ...FinalEvidence[index], index });
+  };
+
+  const handleDeleteEvidence = (index) => {
+    dispatch(deleteEvidence({ index }));
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
       <header className="py-4">
@@ -109,136 +139,263 @@ function CaseEvidence() {
           <Header />
         </div>
       </header>
-      <main className="mx-auto max-w-4xl p-8 rounded-lg bg-gradient-to-b from-teal-800 to-teal-600 shadow-2xl">
-        <div className="flex justify-between items-center mb-6">
+      <main className="mx-auto max-w-5xl px-8 py-5 rounded-lg bg-gradient-to-b from-teal-800 to-teal-600 shadow-2xl">
+        <div className="flex justify-between items-center">
           <h1 className="text-3xl font-bold text-gray-100">Case Prediction</h1>
-          <button className="text-teal-300 hover:text-white font-medium transition">
-            Go Back
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleAddEvidence}
+              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+            >
+              + Add New Evidence
+            </button>
+            <button
+              onClick={handleContinue}
+              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+            >
+              Go Back
+            </button>
+          </div>
         </div>
 
         {/* Case Evidence Details */}
-        <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900">
-          <div className="flex justify-between items-center">
-            <h2 className="text-lg font-medium">Case Evidence Details</h2>
-            <span className="text-teal-300 text-sm">
-              {/* <span className="cursor-pointer font-extrabold text-xl">
-                {"< "}
-              </span> */}
-              Evidence No: {FinalEvidence?.length + 1}
-              {/* <span className="cursor-pointer font-extrabold text-xl">
-                {" >"}
-              </span> */}
-            </span>
-          </div>
-
-          <form className="space-y-6">
-            {/* Select Dropdown */}
-            <select
-              className="w-full px-4 py-2 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-              style={{
-                background: "rgba(217, 217, 217, 0.2)",
-              }}
-              value={evidenceType}
-              onChange={(e) =>
-                setEvidenceType(e.target.value === "" ? null : e.target.value)
-              }
+        <div className="flex flex-col gap-2">
+          {FinalEvidence.map((x, index) => (
+            <div
+              key={index}
+              className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900 mt-[8px]"
             >
-              <option value="" disabled>
-                Select Type Of Evidence Document
-              </option>
+              <div className="flex justify-between items-center">
+                <h2 className="text-lg font-medium">Case Evidence Details</h2>
+                <span className="text-teal-300 text-sm">
+                  {/* <span className="cursor-pointer font-extrabold text-xl">
+                    {"< "}
+                  </span> */}
+                  Evidence No: {index + 1}
+                  {/* <span className="cursor-pointer font-extrabold text-xl">
+                    {" >"}
+                  </span> */}
+                </span>
+              </div>
 
-              <option
-                className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
-                value="circumstantial evidence"
-              >
-                Circumstantial Evidence
-              </option>
-              <option
-                className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
-                value="documentary evidence"
-              >
-                Documentary Evidence
-              </option>
-              <option
-                className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
-                value="physical evidence"
-              >
-                Physical Evidence
-              </option>
-            </select>
+              <form className="space-y-6">
+                {/* Select Dropdown */}
+                <input
+                  readOnly
+                  className="w-full px-4 py-2 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  style={{
+                    background: "rgba(217, 217, 217, 0.2)",
+                  }}
+                  value={x.type}
+                  // onChange={(e) =>
+                  //   setEvidenceType(e.target.value === "" ? null : e.target.value)
+                  // }
+                ></input>
 
-            <div className="relative">
-              <textarea
-                className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                <div className="relative">
+                  <textarea
+                    readOnly
+                    className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    style={{
+                      background: "rgba(217, 217, 217, 0.2)",
+                    }}
+                    rows="5"
+                    placeholder="Enter Detailed Evidence"
+                    value={x.details}
+                    // onChange={(e) => setEvidenceDetails(e.target.value)}
+                  ></textarea>
+                  {/* <button
+                    type="button"
+                    className="absolute top-2 right-3 bg-teal-600 p-2 rounded-full hover:bg-teal-500 focus:outline-none transition"
+                    title="Upload Document"
+                  >
+                    <img src={UploadIcon} alt="Upload" className="h-4 w-4" />
+                  </button> */}
+                </div>
+              </form>
+
+              <div className="flex justify-between items-center">
+                {/* <div className="text-sm">
+                  Evidence Count:{" "}
+                  <span className="font-bold text-teal-300">
+                    {FinalEvidence?.length}
+                  </span>
+                </div> */}
+                <div className="w-full flex justify-end space-x-4">
+                  {/* <button
+                    className="flex items-center justify-center  text-white rounded-full h-10 w-10"
+                    title="Delete Evidence"
+                  >
+                    <img src={Delete} alt="Delete Evidence" className="h-6 w-6" />
+                  </button> */}
+
+                  <button
+                    className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+                    onClick={() => handleEditEvidence(index)}
+                  >
+                    Edit
+                  </button>
+                  <button
+                    className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+                    onClick={() => handleDeleteEvidence(index)}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        {addNewEvidence ? (
+          <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900 mt-[8px]">
+            <div className="flex justify-between items-center">
+              <h2 className="text-lg font-medium">Case Evidence Details</h2>
+              <span className="text-teal-300 text-sm">
+                {/* <span className="cursor-pointer font-extrabold text-xl">
+                      {"< "}
+                    </span> */}
+                Evidence No: {FinalEvidence?.length + 1}
+                {/* <span className="cursor-pointer font-extrabold text-xl">
+                      {" >"}
+                    </span> */}
+              </span>
+            </div>
+
+            <form onSubmit={handleSaveAndAddEvidence} className="space-y-6">
+              {/* Select Dropdown */}
+              <select
+                required
+                className="w-full px-4 py-2 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
                 style={{
                   background: "rgba(217, 217, 217, 0.2)",
                 }}
-                rows="5"
-                placeholder="Enter Detailed Evidence"
-                value={evidenceDetails}
-                onChange={(e) => setEvidenceDetails(e.target.value)}
-              ></textarea>
-              {/* <button
-                type="button"
-                className="absolute top-2 right-3 bg-teal-600 p-2 rounded-full hover:bg-teal-500 focus:outline-none transition"
-                title="Upload Document"
+                value={evidenceType}
+                onChange={(e) =>
+                  setEvidenceType(e.target.value === "" ? null : e.target.value)
+                }
               >
-                <img src={UploadIcon} alt="Upload" className="h-4 w-4" />
-              </button> */}
-            </div>
-          </form>
+                <option value="" disabled>
+                  Select Type Of Evidence Document
+                </option>
 
-          <div className="flex justify-between items-center">
-            <div className="text-sm">
-              Evidence Count:{" "}
-              <span className="font-bold text-teal-300">
-                {FinalEvidence?.length}
-              </span>
-            </div>
-            <div className="flex space-x-4">
-              {/* <button
-                className="flex items-center justify-center  text-white rounded-full h-10 w-10"
-                title="Delete Evidence"
-              >
-                <img src={Delete} alt="Delete Evidence" className="h-6 w-6" />
-              </button> */}
-              <button className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition">
-                <label
-                  htmlFor="fileUpload"
-                  // className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white"
+                <option
+                  className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
+                  value="circumstantial evidence"
                 >
-                  {loading ? (
-                    <CircularProgress size={20} sx={{ color: "white" }} />
-                  ) : (
-                    "Upload Evidence"
-                  )}
-                </label>
-                <input
-                  id="fileUpload"
-                  type="file"
-                  className="hidden"
-                  onChange={handleFileChange}
-                  onClick={handleClickTOFileUpload}
-                />
-                {/* Upload Evidence */}
-              </button>
-              <button
-                className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
-                onClick={handleSaveAndAddEvidence}
-              >
-                Save & Add Evidence
-              </button>
-              <button
-                className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
-                onClick={handleContinue}
-              >
-                Continue
-              </button>
-            </div>
+                  Circumstantial Evidence
+                </option>
+                <option
+                  className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
+                  value="documentary evidence"
+                >
+                  Documentary Evidence
+                </option>
+                <option
+                  className="bg-teal-600 text-white hover:bg-teal-700 hover:text-gray-200"
+                  value="physical evidence"
+                >
+                  Physical Evidence
+                </option>
+              </select>
+
+              <div className="relative">
+                <textarea
+                  required
+                  className="w-full px-4 py-3 min-h-20 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  style={{
+                    background: "rgba(217, 217, 217, 0.2)",
+                  }}
+                  rows="5"
+                  placeholder="Enter Detailed Evidence"
+                  value={evidenceDetails}
+                  onChange={(e) => setEvidenceDetails(e.target.value)}
+                ></textarea>
+                <div className="flex items-center my-1">
+                  <hr className="flex-grow border-white" />
+                  <span className="mx-2 text-white">OR</span>
+                  <hr className="flex-grow border-white" />
+                </div>
+                <div className="flex justify-center items-center">
+                  <div className="w-1/3 bg-teal-600 hover:bg-teal-500 py-2 rounded-lg font-medium transition text-white">
+                    <label
+                      className="flex justify-center items-center"
+                      htmlFor="fileUpload"
+                      // className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white"
+                    >
+                      {loading ? (
+                        <CircularProgress size={20} sx={{ color: "white" }} />
+                      ) : (
+                        "Upload Evidence"
+                      )}
+                    </label>
+                    <input
+                      id="fileUpload"
+                      type="file"
+                      className="hidden"
+                      onChange={handleFileChange}
+                      onClick={handleClickTOFileUpload}
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="flex justify-between items-center">
+                <div className="text-sm">
+                  Total Evidence Added:{" "}
+                  <span className="font-bold text-teal-300">
+                    {FinalEvidence?.length}
+                  </span>
+                </div>
+                <div className="flex space-x-4">
+                  <button
+                    className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+                    type="submit"
+                  >
+                    Save & Continue
+                  </button>
+                  <button
+                    className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+                    onClick={handleContinue}
+                  >
+                    Skip & Continue
+                  </button>
+                </div>
+              </div>
+            </form>
           </div>
-        </div>
+        ) : null}
+        {!addNewEvidence && FinalEvidence.length !== 0 ? (
+          <div className="w-full flex justify-center items-center py-2">
+            <button
+              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition border"
+              onClick={handleContinue}
+            >
+              Save & Continue
+            </button>
+          </div>
+        ) : null}
       </main>
+      <Modal open={openEditDialog} onClose={() => setOpenEditDialog(false)}>
+        <div
+          // className={Styles.scrollable}
+          className="w-[80%] md:w-[60%]"
+          style={{
+            // backgroundColor: "white",
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            color: "black",
+            borderRadius: 10,
+            padding: 10,
+            transform: "translate(-50%, -50%)",
+            boxShadow: 24,
+          }}
+        >
+          <CaseEvidenceModal
+            evidenceObj={editDialogDetails}
+            setOpenEditDialog={setOpenEditDialog}
+          />
+        </div>
+      </Modal>
     </div>
   );
 }

@@ -17,13 +17,15 @@ const Navbar = () => {
           <div className="md:hidden">
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-white focus:outline-none">
+              className="text-white focus:outline-none"
+            >
               <svg
                 className="w-6 h-6"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
+                xmlns="http://www.w3.org/2000/svg"
+              >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -42,20 +44,24 @@ const Navbar = () => {
           <div
             className={`absolute top-16 left-0 w-full text-white md:static md:w-auto md:flex md:items-center md:space-x-8 ${
               isMenuOpen ? "block" : "hidden"
-            }`}>
+            }`}
+          >
             <a
               href="#pricing"
-              className="block py-2 px-4 md:inline hover:text-teal-300 transition-colors duration-200">
+              className="block py-2 px-4 md:inline hover:text-teal-300 transition-colors duration-200"
+            >
               Pricing
             </a>
             <a
               href="#leaders"
-              className="block py-2 px-4 md:inline hover:text-teal-300 transition-colors duration-200">
+              className="block py-2 px-4 md:inline hover:text-teal-300 transition-colors duration-200"
+            >
               Leaders
             </a>
             <a
               href="#news"
-              className="block py-2 px-4 md:inline hover:text-teal-300 transition-colors duration-200">
+              className="block py-2 px-4 md:inline hover:text-teal-300 transition-colors duration-200"
+            >
               News
             </a>
           </div>

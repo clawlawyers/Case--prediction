@@ -6,6 +6,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { setuserId } from "../features/AuthDetails";
 import { openDialog } from "../features/Casedetails";
 import { Alert, CircularProgress } from "@mui/material";
+import toast from "react-hot-toast";
+import { setEvidence } from "../features/EvidenceDetails";
+
 const CasePredictionInput = () => {
   // const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [caseType, setCaseType] = useState("");
@@ -306,63 +309,69 @@ const CasePredictionInput = () => {
   };
 
   const handleContinueToPrediction = async () => {
-    setFinalLoading(true);
-
-    const evidenceDetails = concatenateStringOfArrays(FinalEvidence);
-    try {
-      const pushEvidenceToML = await fetch(
-        `${NODE_API_ENDPOINT}/casePrediction/api/evidence_details`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            user_id: userid,
-            evidence: evidenceDetails,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
+    if (FinalEvidence.length === 0 && FinalTestimony.length === 0) {
+      toast.error("Add atleast one evidence or testimony to continue!");
+    } else {
+      setFinalLoading(true);
+      const newStringArr = FinalEvidence.map(
+        (x, index) => `${x.type} : \n ${x.details}`
       );
-      if (!pushEvidenceToML.ok) {
-        setFinalLoading(false);
-        console.error(
-          "Error pushing evidence to ML:",
-          pushEvidenceToML.statusText
+      const evidenceDetails = concatenateStringOfArrays(newStringArr);
+      try {
+        const pushEvidenceToML = await fetch(
+          `${NODE_API_ENDPOINT}/casePrediction/api/evidence_details`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              user_id: userid,
+              evidence: evidenceDetails,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
-        alert("Failed to push evidence to ML. Please try again.");
-        return;
-      }
-      const witnessDetails = concatenateStringOfArrays(FinalTestimony);
-      const pushTestimonyToML = await fetch(
-        `${NODE_API_ENDPOINT}/casePrediction/api/witness_details`,
-        {
-          method: "POST",
-          body: JSON.stringify({
-            user_id: userid,
-            witness_statement: witnessDetails,
-          }),
-          headers: {
-            "Content-Type": "application/json",
-          },
+        if (!pushEvidenceToML.ok) {
+          setFinalLoading(false);
+          console.error(
+            "Error pushing evidence to ML:",
+            pushEvidenceToML.statusText
+          );
+          alert("Failed to push evidence to ML. Please try again.");
+          return;
         }
-      );
-
-      if (!pushTestimonyToML.ok) {
-        setFinalLoading(false);
-        console.error(
-          "Error pushing testimony to ML:",
-          pushTestimonyToML.statusText
+        const witnessDetails = concatenateStringOfArrays(FinalTestimony);
+        const pushTestimonyToML = await fetch(
+          `${NODE_API_ENDPOINT}/casePrediction/api/witness_details`,
+          {
+            method: "POST",
+            body: JSON.stringify({
+              user_id: userid,
+              witness_statement: witnessDetails,
+            }),
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
         );
-        alert("Failed to push testimony to ML. Please try again.");
-        return;
+
+        if (!pushTestimonyToML.ok) {
+          setFinalLoading(false);
+          console.error(
+            "Error pushing testimony to ML:",
+            pushTestimonyToML.statusText
+          );
+          alert("Failed to push testimony to ML. Please try again.");
+          return;
+        }
+        console.log("Evidence and testimony pushed to ML successfully!");
+        setFinalLoading(false);
+        navigate("/analyze");
+      } catch (error) {
+        setFinalLoading(false);
+        console.error("Error:", error);
+        alert("An error occurred while predicting the case outcome.");
       }
-      console.log("Evidence and testimony pushed to ML successfully!");
-      setFinalLoading(false);
-      navigate("/analyze");
-    } catch (error) {
-      setFinalLoading(false);
-      console.error("Error:", error);
-      alert("An error occurred while predicting the case outcome.");
     }
   };
 
@@ -393,6 +402,7 @@ const CasePredictionInput = () => {
               {/* Dropdowns */}
               <div className="grid grid-cols-1 gap-4 mb-6">
                 <select
+                  required
                   className="text-gray-400 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                   style={{
                     background: "rgba(217, 217, 217, 0.2)",
@@ -411,8 +421,8 @@ const CasePredictionInput = () => {
 
               {/* Radio Buttons and Dropdown */}
               <div className="flex justify-between mb-4 gap-4">
-                <div className="flex-1 flex justify-between">
-                  <p className="mt-1 font-bold">Jurisdiction :</p>
+                <div className="flex-1 flex justify-between items-center">
+                  <p className=" font-bold">Jurisdiction :</p>
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -444,9 +454,9 @@ const CasePredictionInput = () => {
                     <span className="ml-2 text-xs">Supreme Court</span>
                   </label>
                 </div>
-
                 <div className="flex-1">
                   <select
+                    required
                     className="text-gray-400 px-4 py-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                     style={{
                       background: "rgba(217, 217, 217, 0.2)",
@@ -468,6 +478,7 @@ const CasePredictionInput = () => {
 
               {/* Text Area */}
               <textarea
+                required
                 className="text-white min-h-4 px-4 py-2 rounded w-full mb-6 focus:outline-none focus:ring-2 focus:ring-teal-500"
                 style={{
                   background: "rgba(217, 217, 217, 0.2)",
@@ -507,7 +518,7 @@ const CasePredictionInput = () => {
               {/* Analyze Case Button */}
               <button
                 type="submit"
-                className="w-full hover:text-black py-3 rounded hover:bg-gray-300 hover:opacity-90 transition relative overflow-hidden"
+                className="w-full py-2 rounded hover:bg-white hover:bg-opacity-25 transition relative overflow-hidden"
                 style={{
                   border: "1px solid transparent",
                   borderImageSource:
@@ -533,19 +544,19 @@ const CasePredictionInput = () => {
             <h2 className="text-2xl font-bold text-teal-700 mb-4">
               Upload Documents
             </h2>
-            <div className="mb-4 flex justify-between">
+            <div className="mb-4 flex justify-between items-center">
               <p className="text-black">
                 Total Evidence Uploaded: {FinalEvidence?.length}
               </p>
-              <button className="bg-teal-600 text-white px-4 rounded-md hover:bg-teal-700 mt-2">
+              <button className="bg-teal-600 text-white px-4 rounded-md hover:bg-teal-700  w-36">
                 <Link to="/evidence">Add Evidence</Link>
               </button>
             </div>
-            <div className="mb-4 flex justify-between ">
+            <div className="mb-4 flex justify-between items-center">
               <p className="text-black">
                 Total Testimony Uploaded: {FinalTestimony?.length}
               </p>
-              <button className="bg-teal-600 text-white px-4  rounded-md hover:bg-teal-700 mt-2">
+              <button className="bg-teal-600 text-white px-4  rounded-md hover:bg-teal-700  w-36">
                 <Link to="/testimonial">Add Testimony</Link>
               </button>
             </div>
@@ -554,7 +565,7 @@ const CasePredictionInput = () => {
               onClick={handleContinueToPrediction}
             >
               {FinalLoading ? (
-                <CircularProgress size={24} sx={{ color: "white" }} />
+                <CircularProgress size={20} sx={{ color: "white" }} />
               ) : (
                 "Continue"
               )}

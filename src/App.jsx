@@ -8,6 +8,7 @@ import CaseTestimonal from "./Caseprediction/CaseTestimonal";
 import AnalyzeComponents from "./Graph/AnalyzeComponents";
 import { Provider } from "react-redux";
 import store from "./store";
+import { Toaster } from "react-hot-toast";
 
 function App() {
   return (
@@ -22,6 +23,7 @@ function App() {
           <Route path="/analyze" element={<AnalyzeComponents />} />
         </Routes>
       </Router>
+      <Toaster />
     </Provider>
   );
 }

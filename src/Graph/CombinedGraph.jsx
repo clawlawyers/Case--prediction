@@ -57,7 +57,7 @@ const CombinedGraph = ({ Value }) => {
       tooltip: {
         callbacks: {
           label: (context) =>
-            `${context.raw > 0 ? "" : "-"}$${Math.abs(context.raw)}`,
+            `${context.raw > 0 ? "" : "-"}${Math.abs(context.raw)}`,
         },
       },
     },
