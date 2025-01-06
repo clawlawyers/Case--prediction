@@ -44,8 +44,6 @@ function CaseEvidence() {
 
   const handleContinue = (e) => {
     e.preventDefault();
-    // Add your code here to navigate to the next page or perform necessary actions
-    // Example: history.push("/next-page");
     dispatch(openDialog(true));
     navigate("/input");
   };
