@@ -409,7 +409,7 @@ const CasePredictionInput = () => {
 
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold text-center">Case Prediction</h1>
-            <p className="text-sm cursor-pointer hover:underline">Go Back</p>
+            <p className="text-sm cursor-pointer hover:underline" onClick={()=>navigate("/")}>Go Back</p>
           </div>
 
           <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900"   >
@@ -593,18 +593,20 @@ const CasePredictionInput = () => {
               <p className="text-black text-sm md:text-base">
                 Total Evidence Uploaded: {FinalEvidence?.length}
               </p>
-              <button className="bg-teal-600 text-white text-sm md:text-base px-4 h-10 rounded-md hover:bg-teal-700  w-36">
-                <Link to="/evidence">Add Evidence</Link>
-              </button>
+              <button className="bg-teal-600 text-white text-xs sm:text-sm md:text-base px-2 h-8 sm:h-10 rounded hover:bg-teal-700 w-20 sm:w-28 md:w-36">
+  <Link to="/evidence">Add Evidence</Link>
+</button>
             </div>
             
             <div className="mb-4 flex justify-between items-center">
               <p className="text-black text-sm md:text-base">
-                Total Testimony Uploaded: {FinalTestimony?.length}
+              Total Testimony Uploaded: {FinalTestimony?.length}
               </p>
-              <button className="bg-teal-600 text-white text-sm md:text-base px-4 h-10 rounded-md hover:bg-teal-700  w-36">
-                <Link to="/testimonial">Add Testimony</Link>
-              </button>
+              <button className="bg-teal-600 text-white text-xs sm:text-sm md:text-base px-2 h-8 sm:h-10 rounded hover:bg-teal-700 w-20 sm:w-28 md:w-36">
+  <Link to="/testimonial">Add Testimony</Link>
+</button>
+
+             
             </div>
 
             <button
