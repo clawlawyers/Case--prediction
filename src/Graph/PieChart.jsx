@@ -1,10 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Pie } from "react-chartjs-2";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { CircularProgress } from "@mui/material";
-// import { ChartDataLabels } from "chartjs-plugin-datalabels";
 
-ChartJS.register(ArcElement, Tooltip, Legend); // Register the plugin
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const PieChart = ({ Value }) => {
   const data = {
@@ -16,8 +15,8 @@ const PieChart = ({ Value }) => {
     ],
     datasets: [
       {
-        data: Value, // Corresponds to the percentages
-        backgroundColor: ["#22c55e", "#0ea5e9", "#0d9488", "#00D88A"], // Colors from the image
+        data: Value,
+        backgroundColor: ["#22c55e", "#0ea5e9", "#0d9488", "#00D88A"],
         borderWidth: 1,
       },
     ],
@@ -25,28 +24,22 @@ const PieChart = ({ Value }) => {
 
   const options = {
     responsive: true,
-    maintainAspectRatio: false, // Allows for responsive resizing without distorting
+    maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: "right",
+        position: window.innerWidth < 768 ? "bottom" : "right",
         labels: {
-          color: "#fff", // White color for legend text
+          color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12,
+          },
+          padding: window.innerWidth < 768 ? 10 : 20,
         },
       },
       tooltip: {
         callbacks: {
           label: (tooltipItem) => `${tooltipItem.label}: ${tooltipItem.raw}%`,
         },
-      },
-      // Add data label plugin for displaying values on the pie chart
-      datalabels: {
-        color: "#fff", // Color for labels
-        formatter: (value) => `${value}%`, // Show percentage
-        font: {
-          weight: "bold", // Make labels bold
-        },
-        anchor: "center", // Position the label at the center
-        align: "center", // Align the label in the center
       },
     },
     animation: {
@@ -56,11 +49,9 @@ const PieChart = ({ Value }) => {
   };
 
   return (
-    <div className="m-auto">
-      {" "}
-      {/* Set explicit width and height */}
+    <div className="w-full h-[150px] sm:h-[180px] md:h-[230px] md:mb-20">
       {Value.length === 0 ? (
-        <div className="grid place-content-center m-10">
+        <div className="grid place-content-center h-full">
           <CircularProgress size={50} sx={{ color: "white" }} />
         </div>
       ) : (

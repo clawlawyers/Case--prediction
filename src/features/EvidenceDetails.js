@@ -26,7 +26,7 @@ export const evidenceDetailSlice = createSlice({
       }
     },
     resetEvidence(state, action) {
-      state.EvidenceDetail = null;
+      state.EvidenceDetail = [];
     },
   },
 });

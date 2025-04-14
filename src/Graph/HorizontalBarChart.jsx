@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,8 +9,6 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { NODE_API_ENDPOINT } from "../utils/utils";
-import { useSelector } from "react-redux";
 import { CircularProgress } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
@@ -21,24 +20,30 @@ const HorizontalBarChart = ({ Value }) => {
       "Procedural Compliance",
       "Legal Risk Factors",
       "Win Probability",
-    ], // Categories
+    ],
     datasets: [
       {
         label: "Categories",
-        data: Value, // Values for the bars
-        backgroundColor: ["#22c55e", "#16a34a", "#15803d", "#166534"], // Gradient-style colors
-        borderRadius: 10, // Rounded corners for bars
-        borderSkipped: false, // No border skipping for rounded edges
+        data: Value,
+        backgroundColor: ["#22c55e", "#16a34a", "#15803d", "#166534"],
+        borderRadius: {
+          topRight: 10,
+          bottomRight: 10,
+          topLeft: 0,
+          bottomLeft: 0
+        },
+        borderSkipped: false,
       },
     ],
   };
 
   const options = {
-    indexAxis: "y", // Makes the bar chart horizontal
+    indexAxis: "y",
     responsive: true,
+    maintainAspectRatio: false, // Added to prevent chart from maintaining fixed aspect ratio
     plugins: {
       legend: {
-        display: false, // Hide the legend
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -49,12 +54,12 @@ const HorizontalBarChart = ({ Value }) => {
     scales: {
       x: {
         grid: {
-          color: "#334155", // Grid line color
+          color: "#334155",
         },
         ticks: {
-          color: "#fff", // White text for X-axis labels
+          color: "#fff",
           beginAtZero: true,
-          callback: (value) => `${value}%`, // Add '%' to X-axis labels
+          callback: (value) => `${value}%`,
         },
         title: {
           display: true,
@@ -64,10 +69,13 @@ const HorizontalBarChart = ({ Value }) => {
       },
       y: {
         grid: {
-          display: false, // Remove grid lines on Y-axis
+          display: false,
         },
         ticks: {
-          color: "#fff", // White text for Y-axis labels
+          color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive font size
+          },
         },
         title: {
           display: true,
@@ -77,13 +85,14 @@ const HorizontalBarChart = ({ Value }) => {
       },
     },
     animation: {
-      duration: 1500, // Animation duration
+      duration: 1500,
     },
   };
+
   return (
-    <div className="h-[] w-[80%] m-auto">
+    <div className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:w-[80%] lg:mx-auto">
       {Value?.length === 0 ? (
-        <div className="grid place-content-center m-5">
+        <div className="grid place-content-center h-full">
           <CircularProgress size={50} sx={{ color: "white" }} />
         </div>
       ) : (

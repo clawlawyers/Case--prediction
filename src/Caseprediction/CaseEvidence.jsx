@@ -11,6 +11,11 @@ import { NODE_API_ENDPOINT } from "../utils/utils";
 import { CircularProgress, Modal } from "@mui/material";
 import toast from "react-hot-toast";
 import CaseEvidenceModal from "./CaseEvidenceModal";
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+
+import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';//left
+
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';//right
 
 function CaseEvidence() {
   const dispatch = useDispatch();
@@ -22,9 +27,20 @@ function CaseEvidence() {
   const [evidenceType, setEvidenceType] = useState("");
   const [evidenceDetails, setEvidenceDetails] = useState("");
   const [loading, setLoading] = useState(false);
-  const [addNewEvidence, setAddNewEvidence] = useState(false);
+  const [addNewEvidence, setAddNewEvidence] = useState(true);
   const [openEditDialog, setOpenEditDialog] = useState(false);
   const [editDialogDetails, setEditDialogDetails] = useState("");
+  const [showEvidence, setShowEvidence] = useState(false)
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
+  const handleNextEvidence = () => {
+    setCurrentIndex(prev => Math.min(prev + 1, FinalEvidence.length - 1));
+  };
+
+  const handlePrevEvidence = () => {
+    setCurrentIndex(prev => Math.max(prev - 1, 0));
+  };
 
   const handleSaveAndAddEvidence = (e) => {
     e.preventDefault();
@@ -34,7 +50,9 @@ function CaseEvidence() {
       details: evidenceDetails,
     };
     dispatch(setEvidence([...FinalEvidence, newEvidence]));
-    alert("Evidence saved and added successfully!");
+    // alert("Evidence saved and added successfully!");
+    toast.success("Evidence saved successfully!");
+
     setEvidenceType("");
     setEvidenceDetails("");
     setAddNewEvidence(false);
@@ -114,11 +132,12 @@ function CaseEvidence() {
   };
 
   const handleAddEvidence = () => {
-    if (addNewEvidence) {
-      toast.error("Save the current evidence first!");
-    } else {
-      setAddNewEvidence(true);
-    }
+    // if (addNewEvidence) {
+    //   toast.error("Save the current evidence first!");
+    // } else {
+    //   setAddNewEvidence(true);
+    // }
+    setShowEvidence(!showEvidence)
   };
 
   const handleEditEvidence = (index) => {
@@ -133,122 +152,125 @@ function CaseEvidence() {
   return (
     <div className="min-h-screen bg-gradient-to-r from-teal-700 to-gray-800 text-white font-sans">
       <header className="py-4">
-        <div className="max-w-5xl mx-auto px-8 sm:px-6 lg:px-8">
+
+        <div className="w-full sm:w-[90%] mx-auto px-8 sm:px-6 lg:px-8 py-4">
           <Header />
         </div>
+
       </header>
-      <main className="mx-auto max-w-5xl px-8 py-5 rounded-lg bg-gradient-to-b from-teal-800 to-teal-600 shadow-2xl">
-        <div className="flex justify-between items-center">
-          <h1 className="text-3xl font-bold text-gray-100">Case Prediction</h1>
+      <main className="mx-auto w-[calc(100%-40px)] max-w-7xl px-5 py-5 rounded-lg bg-gradient-to-b from-teal-800 to-teal-600 shadow-2xl">  
+              <div className="flex justify-between items-center">
+          <h1 className="text-2xl md:text-3xl  font-bold text-gray-100">Case Prediction</h1>
           <div className="flex gap-2">
-            <button
-              onClick={handleAddEvidence}
-              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
-            >
-              + Add New Evidence
-            </button>
+
+            {FinalEvidence.length > 0 &&
+
+
+              <button
+                onClick={handleAddEvidence}
+                className="bg-teal-600 hover:bg-teal-500 
+          px-1 py-1.5 text-xs          // Extra small text on mobile
+          sm:text-sm                   // Small tablets
+          md:px-4 md:py-2 md:text-base // Tablets
+          lg:px-5                      // Desktop
+          rounded-lg font-medium transition whitespace-nowra"
+              >
+                {showEvidence ? "Hide Evidence" : "Show Evidence"} {/* Shortened text */}
+              </button>
+
+
+            }
+
             <button
               onClick={handleContinue}
-              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+              className="bg-teal-600 hover:bg-teal-500 
+              px-1 py-1.5 text-xs          // Extra small text on mobile
+              sm:text-sm                   // Small tablets
+              md:px-4 md:py-2 md:text-base // Tablets
+              lg:px-5                      // Desktop
+              rounded-lg font-medium transition whitespace-nowra"
             >
               Go Back
             </button>
           </div>
         </div>
 
+
+
         {/* Case Evidence Details */}
         <div className="flex flex-col gap-2">
-          {FinalEvidence.map((x, index) => (
-            <div
-              key={index}
-              className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900 mt-[8px]"
-            >
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-medium">Case Evidence Details</h2>
-                <span className="text-teal-300 text-sm">
-                  {/* <span className="cursor-pointer font-extrabold text-xl">
-                    {"< "}
-                  </span> */}
-                  Evidence No: {index + 1}
-                  {/* <span className="cursor-pointer font-extrabold text-xl">
-                    {" >"}
-                  </span> */}
-                </span>
-              </div>
-
-              <form className="space-y-6">
-                {/* Select Dropdown */}
-                <input
-                  readOnly
-                  className="w-full px-4 py-2 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                  style={{
-                    background: "rgba(217, 217, 217, 0.2)",
-                  }}
-                  value={x.type}
-                  // onChange={(e) =>
-                  //   setEvidenceType(e.target.value === "" ? null : e.target.value)
-                  // }
-                ></input>
-
-                <div className="relative">
-                  <textarea
-                    readOnly
-                    className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
-                    style={{
-                      background: "rgba(217, 217, 217, 0.2)",
-                    }}
-                    rows="5"
-                    placeholder="Enter Detailed Evidence"
-                    value={x.details}
-                    // onChange={(e) => setEvidenceDetails(e.target.value)}
-                  ></textarea>
-                  {/* <button
-                    type="button"
-                    className="absolute top-2 right-3 bg-teal-600 p-2 rounded-full hover:bg-teal-500 focus:outline-none transition"
-                    title="Upload Document"
-                  >
-                    <img src={UploadIcon} alt="Upload" className="h-4 w-4" />
-                  </button> */}
-                </div>
-              </form>
-
-              <div className="flex justify-between items-center">
-                {/* <div className="text-sm">
-                  Evidence Count:{" "}
-                  <span className="font-bold text-teal-300">
-                    {FinalEvidence?.length}
+          {/* Single Evidence Display (replaces the map) */}
+          {showEvidence && <>
+            {FinalEvidence.length > 0 ? (
+              <div
+                key={currentIndex}
+                className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900 mt-[8px]"
+              >
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg font-medium">Case Evidence Details </h2>
+                  <span className="text-teal-300 text-sm  whitespace-nowrap">
+                    <button
+                      onClick={() => setCurrentIndex(prev => Math.max(prev - 1, 0))}
+                      className="p-1 hover:bg-teal-800 rounded-full"
+                      disabled={currentIndex === 0}
+                    >
+                      <KeyboardArrowLeftIcon />
+                    </button>
+                    {currentIndex + 1} of {FinalEvidence.length}
+                    <button
+                      onClick={() => setCurrentIndex(prev => Math.min(prev + 1, FinalEvidence.length - 1))}
+                      className="p-1 hover:bg-teal-800 rounded-full"
+                      disabled={currentIndex === FinalEvidence.length - 1}
+                    >
+                      <ChevronRightIcon />
+                    </button>
                   </span>
-                </div> */}
-                <div className="w-full flex justify-end space-x-4">
-                  {/* <button
-                    className="flex items-center justify-center  text-white rounded-full h-10 w-10"
-                    title="Delete Evidence"
-                  >
-                    <img src={Delete} alt="Delete Evidence" className="h-6 w-6" />
-                  </button> */}
+                </div>
 
+                <form className="space-y-6">
+                  <input
+                    readOnly
+                    className="w-full px-4 py-2 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                    style={{ background: "rgba(217, 217, 217, 0.2)" }}
+                    value={FinalEvidence[currentIndex]?.type}
+                  />
+
+                  <div className="relative">
+                    <textarea
+                      readOnly
+                      className="w-full px-4 py-3 min-h-4 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                      style={{ background: "rgba(217, 217, 217, 0.2)" }}
+                      rows="5"
+                      value={FinalEvidence[currentIndex]?.details}
+                    />
+                  </div>
+                </form>
+
+                <div className="flex justify-end space-x-4">
                   <button
                     className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
-                    onClick={() => handleEditEvidence(index)}
+                    onClick={() => handleEditEvidence(currentIndex)}
                   >
                     Edit
                   </button>
                   <button
                     className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
-                    onClick={() => handleDeleteEvidence(index)}
+                    onClick={() => handleDeleteEvidence(currentIndex)}
                   >
                     Delete
                   </button>
                 </div>
               </div>
-            </div>
-          ))}
+            ) : (
+              ""
+            )}  </>}
         </div>
-        {addNewEvidence ? (
+
+         {!showEvidence && addNewEvidence ? (
           <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900 mt-[8px]">
             <div className="flex justify-between items-center">
-              <h2 className="text-lg font-medium">Case Evidence Details</h2>
-              <span className="text-teal-300 text-sm">
+              <h2 className="text-lg font-medium">Add Evidence Details</h2>
+              <span className="text-teal-300 text-xs sm:text-sm whitespace-nowrap">
                 {/* <span className="cursor-pointer font-extrabold text-xl">
                       {"< "}
                     </span> */}
@@ -272,7 +294,7 @@ function CaseEvidence() {
                   setEvidenceType(e.target.value === "" ? null : e.target.value)
                 }
               >
-                <option value="" disabled>
+                <option value="" disabled >
                   Select Type Of Evidence Document
                 </option>
 
@@ -299,29 +321,80 @@ function CaseEvidence() {
               <div className="relative">
                 <textarea
                   required
-                  className="w-full px-4 py-3 min-h-20 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500"
+                  className="w-full px-4 py-3 min-h-20 text-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 resize-none "
                   style={{
                     background: "rgba(217, 217, 217, 0.2)",
+                     
                   }}
                   rows="5"
                   placeholder="Enter Detailed Evidence"
                   value={evidenceDetails}
                   onChange={(e) => setEvidenceDetails(e.target.value)}
                 ></textarea>
-                <div className="flex items-center my-1">
-                  <hr className="flex-grow border-white" />
-                  <span className="mx-2 text-white">OR</span>
-                  <hr className="flex-grow border-white" />
+                <style>
+  {`
+    textarea::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    textarea::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    textarea::-webkit-scrollbar-thumb {
+      background-color: #14b8a6;
+      border-radius: 10px;
+    }
+
+    textarea::-webkit-scrollbar-button {
+      display: none;
+      height: 0;
+    }
+
+    textarea {
+      scrollbar-width: thin;
+      scrollbar-color: #14b8a6 transparent;
+    }
+  `}
+</style>
+
+
+              </div>
+
+
+              <div className="flex flex-col md:flex-row md:justify-between md:items-center">
+                {/* Text element */}
+                <div className="text-sm whitespace-nowrap mb-2 md:mb-0">
+                  Total Evidence Added:{" "}
+                  <span className="font-bold text-teal-300">
+                    {FinalEvidence?.length}
+                  </span>
                 </div>
-                <div className="flex justify-center items-center">
-                  <div className="w-1/3 bg-teal-600 hover:bg-teal-500 py-2 rounded-lg font-medium transition text-white">
-                    <label
-                      className="flex justify-center items-center"
-                      htmlFor="fileUpload"
-                      // className="w-full text-center bg-teal-800 hover:bg-teal-700 border-green-500 border-[1px] py-2 rounded-lg cursor-pointer text-white"
-                    >
+
+                {/* Button group */}
+                <div className="flex flex-col space-y-3 md:flex-row md:space-y-0 md:space-x-2">
+                  {/* Upload Evidence Button */}
+                  <button
+                    className="relative lg:w-[200px] bg-transparent px-3 py-1.5 text-sm md:px-4 lg:px-4 md:py-1 lg:text-base rounded-lg font-medium transition text-white group"
+                    style={{
+                      border: "2px solid transparent",
+                      background: "transparent",
+                      backgroundClip: "padding-box"
+                    }}
+                  >
+                    <span
+                      className="absolute inset-0 rounded-lg p-[2px]"
+                      style={{
+                        background: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%)",
+                        WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                        WebkitMaskComposite: "xor",
+                        maskComposite: "exclude",
+                        pointerEvents: "none"
+                      }}
+                    ></span>
+                    <label className="flex justify-center items-center relative z-10" htmlFor="fileUpload">
                       {loading ? (
-                        <CircularProgress size={20} sx={{ color: "white" }} />
+                        <CircularProgress size={16} sx={{ color: "white" }} />
                       ) : (
                         "Upload Evidence"
                       )}
@@ -333,28 +406,54 @@ function CaseEvidence() {
                       onChange={handleFileChange}
                       onClick={handleClickTOFileUpload}
                     />
-                  </div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center">
-                <div className="text-sm">
-                  Total Evidence Added:{" "}
-                  <span className="font-bold text-teal-300">
-                    {FinalEvidence?.length}
-                  </span>
-                </div>
-                <div className="flex space-x-4">
+                  </button>
+
+                  {/* Save & Continue Button */}
                   <button
-                    className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+                    className="relative lg:w-[200px] bg-transparent px-3 py-1.5 text-sm md:px-4 lg:px-4 md:py-1 lg:text-base rounded-lg font-medium transition text-white group"
+                    style={{
+                      border: "2px solid transparent",
+                      background: "transparent"
+                    }}
                     type="submit"
                   >
-                    Save & Continue
+                    <span
+                      className="absolute inset-0 rounded-lg p-[2px]"
+                      style={{
+                        background: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%)",
+                        WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                        WebkitMaskComposite: "xor",
+                        maskComposite: "exclude",
+                        pointerEvents: "none"
+                      }}
+                    ></span>
+                    <span className="relative z-10">
+                      Save & Continue
+                    </span>
                   </button>
+
+                  {/* Skip & Continue Button */}
                   <button
-                    className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
+                    className="relative lg:w-[200px] md:w-[150px] bg-transparent px-3 py-1.5 text-sm md:px-4 lg:px-4 md:py-1 lg:text-base rounded-lg font-medium transition text-white group"
+                    style={{
+                      border: "2px solid transparent",
+                      background: "transparent"
+                    }}
                     onClick={handleContinue}
                   >
-                    Skip & Continue
+                    <span
+                      className="absolute inset-0 rounded-lg p-[2px]"
+                      style={{
+                        background: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%)",
+                        WebkitMask: "linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0)",
+                        WebkitMaskComposite: "xor",
+                        maskComposite: "exclude",
+                        pointerEvents: "none"
+                      }}
+                    ></span>
+                    <span className="relative z-10">
+                       Continue
+                    </span>
                   </button>
                 </div>
               </div>
@@ -364,7 +463,7 @@ function CaseEvidence() {
         {!addNewEvidence && FinalEvidence.length !== 0 ? (
           <div className="w-full flex justify-center items-center py-2">
             <button
-              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition border"
+              className="bg-red hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition border"
               onClick={handleContinue}
             >
               Save & Continue
