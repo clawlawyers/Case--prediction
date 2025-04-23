@@ -17,10 +17,10 @@ const CasePrediction = () => {
       </header>
       <main className="flex flex-col items-center text-center pt-16">
         <h1 className="text-5xl font-bold mb-6 mx-2 ">Case Prediction</h1>
-        <p className="text-[16px] max-w-3xl mx-4">
+        <p className="text-[16px] max-w-3xl sm:mx-6 mx-4">
           Analyze the strength of your case before stepping into the courtroom.
         </p>
-        <p className="font-sans text-[16px] max-w-3xl mb-12 font-normal mx-4">
+        <p className="font-sans text-[16px] max-w-3xl mb-12 font-normal sm:mx-6  mx-4">
           The Case Prediction uses advanced AI to evaluate your evidence,
           witnesses, and legal scenario, providing a detailed analysis of your
           case's probability of success. Make informed decisions with clarity
@@ -79,13 +79,15 @@ const CasePrediction = () => {
         {/* <button className="border hover:opacity-95 border-white text-white px-8 py-2 rounded-lg"  style={{ borderImage: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%) 1" }}>
           <Link to="/input">Analyze Your Legal Case</Link>
         </button> */}
+
+<Link to="/input">
 <button 
   className="w-full max-w-[250px] sm:max-w-[280px] md:max-w-[400px] hover:opacity-95 border-2 border-transparent text-white px-4 py-2 sm:px-6 sm:py-3 rounded-[10px] mx-auto my-6"
   style={{ borderImage: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%) 1" }}
 >
-  <Link to="/input">Analyze Your Legal Case</Link>
+  Analyze Your Legal Case
 </button>
-
+</Link>
       </main>
     </div>
   );
