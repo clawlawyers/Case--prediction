@@ -147,110 +147,131 @@ const AnalyzeComponents = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-teal-700 to-gray-900 text-white pb-5">
       <header className="py-4">
-        <div className="max-w-5xl mx-auto px-8 sm:px-6 lg:px-8">
-          <Header />
-        </div>
+        
+          <div className="w-full sm:w-[90%] mx-auto px-8 sm:px-6 lg:px-8 py-4">
+                  <Header />
+                </div>
       </header>
-      <div className="w-[80%] m-auto flex flex-col gap-3">
-        <div className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Case Analysis</h1>
-          <div className="flex gap-3 items-center">
-            <button
-              onClick={handleContinue}
-              className="bg-teal-600 hover:bg-teal-500 px-5 py-2 rounded-lg font-medium transition"
-            >
-              Go Back
-            </button>
-            <HelpOutlineIcon className="cursor-pointer" onClick={handleClick} />
-            <Popover
-              id={id}
-              open={open}
-              anchorEl={anchorEl}
-              onClose={handleClose}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-            >
-              <div className="h-[450px] w-[350px] border">
-                <AskQuery handleClose={handleClose} />
-              </div>
-            </Popover>
-          </div>
-        </div>
-        <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border">
-          <h1 style={{ color: "#fff", textAlign: "center" }}>
-            Average Score For Each Category
-          </h1>
+      <div className="w-full px-4 md:w-[80%] md:m-auto flex flex-col gap-3">
+  {/* Header Section */}
+  <div className="flex flex-col sm:flex-row justify-between items-center gap-3">
+    <h1 className="text-xl sm:text-2xl font-bold">Case Analysis</h1>
+    <div className="flex gap-3 items-center">
+      <button
+        onClick={handleContinue}
+        className="bg-teal-600 hover:bg-teal-500 px-3 sm:px-5 py-2 rounded-lg font-medium transition text-sm sm:text-base"
+      >
+        Go Back
+      </button>
+      <HelpOutlineIcon className="cursor-pointer" onClick={handleClick} />
+      <Popover
+  id={id}
+  open={open}
+  anchorEl={anchorEl}
+  onClose={handleClose}
+  anchorOrigin={{
+    vertical: "bottom",
+    horizontal: "left",
+  }}
+  transformOrigin={{
+    vertical: "top",
+    horizontal: "left",
+  }}
+  sx={{
+    "& .MuiPopover-paper": {
+      marginLeft: { xs: 0, md: "-16px" }, // Shifts left on medium+ screens
+      marginTop: "8px" // Adds small gap from anchor element
+    }
+  }}
+>
+  <div className="h-[300px] sm:h-[450px] w-[280px] sm:w-[350px] border">
+    <AskQuery handleClose={handleClose} />
+  </div>
+</Popover>
+    </div>
+  </div>
 
-          <HorizontalBarChart Value={overallScore} />
-        </div>
-        <div className="w-full grid md:grid-cols-2 gap-3">
-          <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
-            <h1 style={{ color: "#fff", textAlign: "center" }}>
-              Win Probability (Factor Wise)
-            </h1>
-            <div className="w-full h-full flex-1">
-              <WinBarChart Value={winProbability} />
-            </div>
-          </div>
-          <div className="w-full h-full  bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
-            <h1 style={{ color: "#fff", textAlign: "center" }}>
-              Evidence Analysis Strength
-            </h1>
-            <PieChart Value={evidenceAnalysis} />
-          </div>
-        </div>
-        <div className="w-full grid md:grid-cols-2 gap-3">
-          <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
-            <h1 style={{ color: "#fff", textAlign: "center" }}>
-              Legal Complexity Factors
-            </h1>
-            <div className="w-full h-full flex-1">
-              <LegalBarChart Value={legalFactors} />
-            </div>
-          </div>
-          <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
-            <h1 style={{ color: "#fff", textAlign: "center" }}>
-              Procedural Viability Compliance
-            </h1>
-            <div className="w-full h-full flex-1">
-              <ProceduralBarChart Value={proceduralCompliance} />
-            </div>
-          </div>
-        </div>
-        <div className="bg-white bg-opacity-25 rounded-lg border pt-10 px-5">
-          <CombinedGraph Value={cost} />
-        </div>
-        <div className="bg-white bg-opacity-25 rounded-lg border py-2 px-5 flex flex-col justify-between items-center">
-          <div className="w-full flex justify-between items-center">
-            <p className="text-lg font-bold">Recommended Actions</p>
-            {showDialog ? (
-              <RemoveCircleOutlineIcon
-                className="cursor-pointer"
-                onClick={() => setShowDialog(false)}
-              />
-            ) : (
-              <AddCircleOutlineIcon
-                onClick={handleRecommendedActions}
-                className="cursor-pointer"
-              />
-            )}
-          </div>
-          {showDialog && (
-            <div>
-              {recommendedAction === "" ? (
-                <CircularProgress sx={{ color: "white" }} />
-              ) : (
-                <p
-                  dangerouslySetInnerHTML={{ __html: recommendedAction }}
-                  className=" py-2 text-sm text-white rounded-t-xl rounded-r-xl"
-                ></p>
-              )}
-            </div>
-          )}
-        </div>
+  {/* Main Chart */}
+  <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border">
+    <h1 className="text-white text-center text-sm sm:text-base">
+      Average Score For Each Category
+    </h1>
+    <HorizontalBarChart Value={overallScore} />
+  </div>
+
+  {/* First Row of Charts */}
+  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
+      <h1 className="text-white text-center text-sm sm:text-base">
+        Win Probability (Factor Wise)
+      </h1>
+      <div className="w-full h-full flex-1">
+        <WinBarChart Value={winProbability} />
       </div>
+    </div>
+    <div className="w-full h-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
+      <h1 className="text-white text-center text-sm sm:text-base">
+        Evidence Analysis Strength
+      </h1>
+      <PieChart Value={evidenceAnalysis} />
+    </div>
+  </div>
+
+  {/* Second Row of Charts */}
+  <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-3">
+    <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
+      <h1 className="text-white text-center text-sm sm:text-base">
+        Legal Complexity Factors
+      </h1>
+      <div className="w-full h-full flex-1">
+        <LegalBarChart Value={legalFactors} />
+      </div>
+    </div>
+    <div className="w-full bg-white bg-opacity-25 p-3 rounded-lg border flex flex-col items-center justify-between">
+      <h1 className="text-white text-center text-sm sm:text-base">
+        Procedural Viability Compliance
+      </h1>
+      <div className="w-full h-full flex-1">
+        <ProceduralBarChart Value={proceduralCompliance} />
+      </div>
+    </div>
+  </div>
+
+  {/* Combined Graph */}
+  <div className="bg-white bg-opacity-25 rounded-lg border pt-5 sm:pt-10 px-3 sm:px-5">
+    <CombinedGraph Value={cost} />
+  </div>
+
+  {/* Recommended Actions */}
+  <div className="bg-white bg-opacity-25 rounded-lg border py-2 px-3 sm:px-5 flex flex-col justify-between items-center">
+    <div className="w-full flex justify-between items-center">
+      <p className="text-base sm:text-lg font-bold">Recommended Actions</p>
+      {showDialog ? (
+        <RemoveCircleOutlineIcon
+          className="cursor-pointer"
+          onClick={() => setShowDialog(false)}
+        />
+      ) : (
+        <AddCircleOutlineIcon
+          onClick={handleRecommendedActions}
+          className="cursor-pointer"
+        />
+      )}
+    </div>
+    {showDialog && (
+      <div className="w-full">
+        {recommendedAction === "" ? (
+          <CircularProgress sx={{ color: "white" }} />
+        ) : (
+          <p
+            dangerouslySetInnerHTML={{ __html: recommendedAction }}
+            className="py-2 text-xs sm:text-sm text-white rounded-t-xl rounded-r-xl"
+          ></p>
+        )}
+      </div>
+    )}
+  </div>
+</div>
     </div>
   );
 };

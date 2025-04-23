@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -14,25 +14,26 @@ ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const LegalBarChart = ({ Value }) => {
   const data = {
-    labels: ["Statute Clarity", "Factual Nuances", "Legal Interpretation"], // X-axis labels
+    labels: ["Statute Clarity", "Factual Nuances", "Legal Interpretation"],
     datasets: [
       {
         label: "Score",
-        data: Value, // Data points for the bars
-        backgroundColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Bar colors
-        borderColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Border colors
+        data: Value,
+        backgroundColor: ["#0ea5e9", "#0d9488", "#22c55e"],
+        borderColor: ["#0ea5e9", "#0d9488", "#22c55e"],
         borderWidth: 1,
-        borderRadius: 10, // Rounded corners for bars
-        barPercentage: 0.6, // Adjust width of bars
+        borderRadius: 10,
+        barPercentage: 0.6,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Added for responsive behavior
     plugins: {
       legend: {
-        display: false, // Hide the legend
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -43,43 +44,54 @@ const LegalBarChart = ({ Value }) => {
     scales: {
       x: {
         grid: {
-          display: false, // Remove grid lines on X-axis
+          display: false,
         },
         ticks: {
-          color: "#fff", // White text for labels
+          color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive font size
+          },
         },
         title: {
           display: true,
           text: "Factors",
           color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 12 : 14, // Responsive title size
+          },
         },
       },
       y: {
         grid: {
-          //   display: false,
           color: "#334155",
         },
         ticks: {
-          color: "#fff", // White text for labels
+          color: "#fff",
           beginAtZero: true,
-          callback: (value) => `${value}%`, // Add '%' to Y-axis labels
+          callback: (value) => `${value}%`,
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive font size
+          },
         },
         title: {
           display: true,
           text: "Score",
           color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 12 : 14, // Responsive title size
+          },
         },
       },
     },
     animation: {
-      duration: 1500, // Animation duration
+      duration: 1500,
     },
   };
 
   return (
-    <div className="w-full h-full flex items-center justify-center">
+    <div className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
       {Value.length === 0 ? (
-        <div className="grid place-content-center m-10">
+        <div className="grid place-content-center h-full">
           <CircularProgress size={50} sx={{ color: "white" }} />
         </div>
       ) : (

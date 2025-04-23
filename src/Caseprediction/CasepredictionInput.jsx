@@ -5,6 +5,9 @@ import { NODE_API_ENDPOINT } from "../utils/utils";
 import { useDispatch, useSelector } from "react-redux";
 import { setuserId } from "../features/AuthDetails";
 import { openDialog } from "../features/Casedetails";
+import { closeDialog } from "../features/Casedetails";
+import { resetEvidence } from "../features/EvidenceDetails";
+import { resetTestimony } from "../features/Testimony";
 import { Alert, CircularProgress } from "@mui/material";
 import toast from "react-hot-toast";
 import { setEvidence } from "../features/EvidenceDetails";
@@ -18,6 +21,7 @@ const CasePredictionInput = () => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [FinalLoading, setFinalLoading] = useState(false);
+  
 
   const navigate = useNavigate();
 
@@ -195,6 +199,7 @@ const CasePredictionInput = () => {
         console.error("Error in API call:", error);
       }
     };
+
     if (!userid) {
       fetchData();
     }
@@ -300,6 +305,8 @@ const CasePredictionInput = () => {
     }
   };
 
+  
+
   const concatenateStringOfArrays = (arr) => {
     let result = "";
     for (let i = 0; i < arr.length; i++) {
@@ -313,6 +320,7 @@ const CasePredictionInput = () => {
       toast.error("Add atleast one evidence or testimony to continue!");
     } else {
       setFinalLoading(true);
+
       const newStringArr = FinalEvidence.map(
         (x, index) => `${x.type} : \n ${x.details}`
       );
@@ -374,25 +382,37 @@ const CasePredictionInput = () => {
       }
     }
   };
+  const handleCloseModal = () => {
+    const shouldClose = window.confirm("Are you sure you want to close?");
+  if (shouldClose) {
+    dispatch(resetEvidence());
+    dispatch(resetTestimony());
+    dispatch(closeDialog());
+  }
+    // your modal close logic
+  };
 
   return (
     <div className="bg-gradient-to-b from-teal-900 to-teal-700 min-h-screen text-white font-['Plus Jakarta Sans']">
       {/* Fixed Header */}
       <header>
-        <div className="max-w-5xl mx-auto px-8 py-4 sm:px-6 lg:px-8">
+        <div className="w-full sm:w-[90%] mx-auto px-8 sm:px-6 lg:px-8 py-4">
           <Header />
         </div>
       </header>
 
       {/* Main Content */}
-      <div className="flex items-center w-80% justify-center pt-4">
-        <div className="bg-teal-800 rounded-xl p-8 w-11/12 max-w-4xl shadow-lg">
+      <div className="flex items-center w-80% justify-center pt-4" >
+        {/* ..........................................................................................................................OUTER................ */}
+        <div className="bg-teal-800 rounded-xl p-4 sm:p-8 w-11/12 max-w-7xl shadow-lg">
           {/* Title */}
+
           <div className="flex justify-between items-center mb-4">
             <h1 className="text-3xl font-bold text-center">Case Prediction</h1>
-            <p className="text-sm cursor-pointer hover:underline">Go Back</p>
+            <p className="text-sm cursor-pointer hover:underline" onClick={()=>navigate("/")}>Go Back</p>
           </div>
-          <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900">
+
+          <div className="border border-teal-500 rounded-lg p-6 space-y-6 bg-teal-900"   >
             <p className="text-xl font-bold text-center mb-6">
               Enter Your Case Details
             </p>
@@ -405,24 +425,29 @@ const CasePredictionInput = () => {
                   required
                   className="text-gray-400 px-4 py-2 rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                   style={{
-                    background: "rgba(217, 217, 217, 0.2)",
+                    color: "white",
+                    // background: "rgba(217, 217, 217, 0.2)",
+                    background: "rgba(50, 141, 127, 0.8)"
                   }}
                   value={caseType}
                   onChange={(e) => setCaseType(e.target.value)}
                 >
                   <option value="" disabled>
-                    Select Your Case Type
-                  </option>
+                    Select Your Case Type  </option>
+
                   <option value="Criminal">Criminal</option>
                   <option value="Civil">Civil</option>
                   <option value="Family">Family</option>
                 </select>
+
               </div>
 
               {/* Radio Buttons and Dropdown */}
-              <div className="flex justify-between mb-4 gap-4">
-                <div className="flex-1 flex justify-between items-center">
-                  <p className=" font-bold">Jurisdiction :</p>
+              <div className="flex flex-col sm:flex-row justify-between mb-4 gap-4">
+
+                <div className="flex flex-col sm:flex-row   sm:flex-1 sm:justify-between sm:items-center gap-4">
+                  <p className="font-bold text-sm sm:text-base">Jurisdiction :</p>
+
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -431,8 +456,9 @@ const CasePredictionInput = () => {
                       className="text-teal-600 focus:ring-teal-500"
                       onChange={(e) => setJurisdiction(e.target.value)}
                     />
-                    <span className="ml-2 text-xs">District Court</span>
+                    <span className="ml-2 text-sm">District Court</span>
                   </label>
+
                   <label className="flex items-center">
                     <input
                       type="radio"
@@ -441,7 +467,7 @@ const CasePredictionInput = () => {
                       className="text-teal-600 focus:ring-teal-500"
                       onChange={(e) => setJurisdiction(e.target.value)}
                     />
-                    <span className="ml-2 text-xs">High Court</span>
+                    <span className="ml-2 text-sm">High Court</span>
                   </label>
                   <label className="flex items-center">
                     <input
@@ -451,15 +477,20 @@ const CasePredictionInput = () => {
                       className="text-teal-600 focus:ring-teal-500"
                       onChange={(e) => setJurisdiction(e.target.value)}
                     />
-                    <span className="ml-2 text-xs">Supreme Court</span>
+                    <span className="ml-2 text-sm">Supreme Court</span>
                   </label>
                 </div>
+
                 <div className="flex-1">
                   <select
                     required
                     className="text-gray-400 px-4 py-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-teal-500"
                     style={{
-                      background: "rgba(217, 217, 217, 0.2)",
+                      // background: "rgba(217, 217, 217, 0.2)",
+                      color: "white",
+                      // background: "rgba(217, 217, 217, 0.2)",
+                      background: "rgba(50, 141, 127, 0.8)"
+
                     }}
                     value={court}
                     onChange={(e) =>
@@ -474,24 +505,28 @@ const CasePredictionInput = () => {
                     ))}
                   </select>
                 </div>
+
               </div>
 
               {/* Text Area */}
               <textarea
                 required
-                className="text-white min-h-4 px-4 py-2 rounded w-full mb-6 focus:outline-none focus:ring-2 focus:ring-teal-500"
+                className="text-white min-h-4 px-4 py-2 rounded w-full mb-6 focus:outline-none focus:ring-2 focus:ring-teal-500 placeholder:text-xs sm:placeholder:text-base"  // NEW: Responsive placeholder
                 style={{
                   background: "rgba(217, 217, 217, 0.2)",
                 }}
                 rows="4"
-                placeholder="Enter Your Detailed Case Overview"
+                placeholder="Enter Your  Detailed  Case Overview"
                 value={caseDetails}
                 onChange={(e) => setCaseDetails(e.target.value)}
               ></textarea>
 
               {/* File Upload */}
+
+
               <div className="flex w-full justify-between mb-6">
                 {/* Conditional Rendering */}
+
                 {!selectedFile ? (
                   <>
                     {/* Upload Button */}
@@ -514,7 +549,10 @@ const CasePredictionInput = () => {
                     File uploaded successfully!
                   </Alert>
                 )}
+
               </div>
+
+
               {/* Analyze Case Button */}
               <button
                 type="submit"
@@ -535,31 +573,42 @@ const CasePredictionInput = () => {
             </form>
           </div>
         </div>
+        {/* ...............................................................................................OUTER.......................................................................... */}
       </div>
 
       {/* Dialog Box */}
       {isDialogOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg p-6 w-11/12 max-w-md text-center">
+
+          <div className="bg-white rounded-lg p-6 w-11/12 max-w-md text-center relative">
+          
+          <button className="absolute top-4 right-4 cursor-pointer"onClick={()=>handleCloseModal()} > 
+            ❌
+          </button>
+
             <h2 className="text-2xl font-bold text-teal-700 mb-4">
               Upload Documents
             </h2>
             <div className="mb-4 flex justify-between items-center">
-              <p className="text-black">
+              <p className="text-black text-sm md:text-base">
                 Total Evidence Uploaded: {FinalEvidence?.length}
               </p>
-              <button className="bg-teal-600 text-white px-4 rounded-md hover:bg-teal-700  w-36">
-                <Link to="/evidence">Add Evidence</Link>
-              </button>
+              <button className="bg-teal-600 text-white text-xs sm:text-sm md:text-base px-2 h-8 sm:h-10 rounded hover:bg-teal-700 w-20 sm:w-28 md:w-36">
+  <Link to="/evidence">Add Evidence</Link>
+</button>
             </div>
+            
             <div className="mb-4 flex justify-between items-center">
-              <p className="text-black">
-                Total Testimony Uploaded: {FinalTestimony?.length}
+              <p className="text-black text-sm md:text-base">
+              Total Testimony Uploaded: {FinalTestimony?.length}
               </p>
-              <button className="bg-teal-600 text-white px-4  rounded-md hover:bg-teal-700  w-36">
-                <Link to="/testimonial">Add Testimony</Link>
-              </button>
+              <button className="bg-teal-600 text-white text-xs sm:text-sm md:text-base px-2 h-8 sm:h-10 rounded hover:bg-teal-700 w-20 sm:w-28 md:w-36">
+  <Link to="/testimonial">Add Testimony</Link>
+</button>
+
+             
             </div>
+
             <button
               className="w-full bg-teal-700 text-white py-2 rounded-md hover:bg-teal-800 mt-4"
               onClick={handleContinueToPrediction}
@@ -567,10 +616,11 @@ const CasePredictionInput = () => {
               {FinalLoading ? (
                 <CircularProgress size={20} sx={{ color: "white" }} />
               ) : (
-                "Continue"
+                "Start Analyzing"
               )}
             </button>
           </div>
+
         </div>
       )}
     </div>

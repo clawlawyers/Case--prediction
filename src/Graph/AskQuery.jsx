@@ -103,7 +103,7 @@ const AskQuery = ({ handleClose }) => {
   };
 
   return (
-    <div className="w-full h-full flex flex-col gap-2 bg-[#1D2330] text-white p-2  rounded-lg">
+    <div className="w-full h-full flex flex-col gap-2 bg-[#1D2330] text-white p-2  rounded-lg ">
       <div className="flex justify-between items-center border-b pb-2">
         <div className="flex gap-1 items-center">
           <p className="m-0 text-white text-xl font-semibold">Ask Your Query</p>

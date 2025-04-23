@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -9,11 +9,8 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { NODE_API_ENDPOINT } from "../utils/utils";
-import { useSelector } from "react-redux";
 import { CircularProgress } from "@mui/material";
 
-// Register Chart.js modules
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -36,12 +33,15 @@ const CombinedGraph = ({ Value }) => {
         label: "Amount",
         data: Value,
         backgroundColor: ["#1ABAEF", "#006C81", "#004D63", "#00D88A"],
+        borderRadius: 4, // Added for better visual appearance
+        barPercentage: 0.8, // Better bar width for responsiveness
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Added for responsive behavior
     plugins: {
       legend: {
         display: false,
@@ -51,7 +51,7 @@ const CombinedGraph = ({ Value }) => {
         text: "Costs and Compensation",
         color: "#FFFFFF",
         font: {
-          size: 18,
+          size: window.innerWidth < 768 ? 14 : 18, // Responsive title size
         },
       },
       tooltip: {
@@ -67,9 +67,15 @@ const CombinedGraph = ({ Value }) => {
           display: true,
           text: "Categories",
           color: "#FFFFFF",
+          font: {
+            size: window.innerWidth < 768 ? 12 : 14, // Responsive title size
+          },
         },
         ticks: {
           color: "#FFFFFF",
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive label size
+          },
         },
       },
       y: {
@@ -77,9 +83,15 @@ const CombinedGraph = ({ Value }) => {
           display: true,
           text: "Amount",
           color: "#FFFFFF",
+          font: {
+            size: window.innerWidth < 768 ? 12 : 14, // Responsive title size
+          },
         },
         ticks: {
           color: "#FFFFFF",
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive label size
+          },
         },
         grid: {
           color: "rgba(255, 255, 255, 0.2)",
@@ -89,15 +101,15 @@ const CombinedGraph = ({ Value }) => {
   };
 
   return (
-    <>
+    <div className="w-full h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px]">
       {Value.length === 0 ? (
-        <div className="grid place-content-center m-10">
+        <div className="grid place-content-center h-full">
           <CircularProgress size={50} sx={{ color: "white" }} />
         </div>
       ) : (
-        <Bar className="" data={data} options={options} />
+        <Bar data={data} options={options} />
       )}
-    </>
+    </div>
   );
 };
 

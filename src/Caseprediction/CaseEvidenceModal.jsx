@@ -5,6 +5,8 @@ import DriveFolderUploadIcon from "@mui/icons-material/DriveFolderUpload";
 import { CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { changeEvidence } from "../features/EvidenceDetails";
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos'; //left
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos'; //right
 
 const CaseEvidenceModal = ({ evidenceObj, setOpenEditDialog }) => {
   const [evidenceType, setEvidenceType] = useState(evidenceObj.type);
@@ -177,6 +179,7 @@ const CaseEvidenceModal = ({ evidenceObj, setOpenEditDialog }) => {
                 ) : (
                   "Upload Evidence"
                 )}
+
               </label>
               <input
                 id="fileUpload"

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -8,33 +8,32 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { NODE_API_ENDPOINT } from "../../utils/utils";
-import { useSelector } from "react-redux";
 import { CircularProgress } from "@mui/material";
 
 ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
 
 const WinBarChart = ({ Value }) => {
   const data = {
-    labels: ["Statutory Alignment", "Precedent Support", "Case Merits"], // X-axis labels
+    labels: ["Statutory Alignment", "Precedent Support", "Case Merits"],
     datasets: [
       {
         label: "Probability(%)",
-        data: Value, // Data points for the bars
-        backgroundColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Bar colors
-        borderColor: ["#0ea5e9", "#0d9488", "#22c55e"], // Border colors
+        data: Value,
+        backgroundColor: ["#0ea5e9", "#0d9488", "#22c55e"],
+        borderColor: ["#0ea5e9", "#0d9488", "#22c55e"],
         borderWidth: 1,
-        borderRadius: 10, // Rounded corners for bars
-        barPercentage: 0.6, // Adjust width of bars
+        borderRadius: 10,
+        barPercentage: 0.6,
       },
     ],
   };
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false, // Added for better responsiveness
     plugins: {
       legend: {
-        display: false, // Hide the legend
+        display: false,
       },
       tooltip: {
         callbacks: {
@@ -45,43 +44,54 @@ const WinBarChart = ({ Value }) => {
     scales: {
       x: {
         grid: {
-          display: false, // Remove grid lines on X-axis
+          display: false,
         },
         ticks: {
-          color: "#fff", // White text for labels
+          color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive font size
+          },
         },
         title: {
           display: true,
           text: "Factors",
           color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 12 : 14, // Responsive title size
+          },
         },
       },
       y: {
         grid: {
-          //   display: false,
           color: "#334155",
         },
         ticks: {
-          color: "#fff", // White text for labels
+          color: "#fff",
           beginAtZero: true,
-          callback: (value) => `${value}%`, // Add '%' to Y-axis labels
+          callback: (value) => `${value}%`,
+          font: {
+            size: window.innerWidth < 768 ? 10 : 12, // Responsive font size
+          },
         },
         title: {
           display: true,
           text: "Probability(%)",
           color: "#fff",
+          font: {
+            size: window.innerWidth < 768 ? 12 : 14, // Responsive title size
+          },
         },
       },
     },
     animation: {
-      duration: 1500, // Animation duration
+      duration: 1500,
     },
   };
 
   return (
-    <div className="m-auto">
+    <div className="w-full h-[300px] sm:h-[350px] md:h-[400px]">
       {Value.length === 0 ? (
-        <div className="grid place-content-center m-10">
+        <div className="grid place-content-center h-full">
           <CircularProgress size={50} sx={{ color: "white" }} />
         </div>
       ) : (
