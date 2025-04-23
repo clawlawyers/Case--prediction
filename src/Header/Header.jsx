@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import ClawLogo from "../assets/ClawLogo.png";
 import { useNavigate } from "react-router-dom";
 
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -9,7 +10,7 @@ const Navbar = () => {
 
   return (
     <nav className="bg-gradient-to-r rounded-lg from-teal-600 to-teal-800 text-white shadow-md">
-      <div className="max-w-6xl rounded-lg mx-auto px-4 sm:px-6 lg:px-8">
+      <div className=" w-6xl rounded-lg mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
