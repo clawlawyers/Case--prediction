@@ -50,7 +50,7 @@ const CasePrediction = () => {
           value: 150,
         },
         opacity: { value: 0.5 },
-        shape: { type: "star" },
+        shape: { type: "circle" },
         size: { value: { min: 1, max: 2 } },
       },
       detectRetina: true,
