@@ -178,7 +178,8 @@ initial={{y:50, opacity: 0,}}
 
           <Link to="/input">
             <button
-              className="w-full max-w-[250px] sm:max-w-[280px] md:max-w-[480px] hover:opacity-95 border-2 border-transparent text-white px-4 py-2 sm:px-6 sm:py-3 rounded-[10px] mb-4 md:mt-6"
+              // className="w-full max-w-[250px] sm:max-w-[280px] md:max-w-[480px] hover:opacity-95 border-2 border-transparent text-white px-4 py-2 sm:px-6 sm:py-3 rounded-[10px] mb-4 md:mt-6"
+              className={`exp-button w-full max-w-[250px] sm:max-w-[280px] md:max-w-[480px] hover:opacity-95 border-2 border-transparent text-white px-4 py-2 sm:px-6 sm:py-3  mb-4 md:mt-6`}
               style={{ borderImage: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%) 1" }}
             >
               Analyze Your Legal Case
@@ -188,6 +189,107 @@ initial={{y:50, opacity: 0,}}
 
         </main>
       </div>
+
+
+
+
+      <style>
+
+
+        {
+          `.exp-button {
+  
+  color: white;
+  cursor: pointer;
+  margin-top: auto;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+ 
+  -webkit-tap-highlight-color: transparent;
+  z-index: 1;
+}
+
+/* Button shine effect */
+.exp-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  transition: 0.5s;
+  z-index: -1;
+}
+
+/* Button glow effect */
+.exp-button::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #00ffff, #00bcd4, #00ffff);
+
+  z-index: -2;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Button hover and active states */
+.exp-button:hover,
+.exp-button:active {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  animation: buttonPulse 1.5s infinite;
+}
+
+.exp-button:hover::before,
+.exp-button:active::before {
+  left: 100%;
+}
+
+.exp-button:hover::after,
+.exp-button:active::after {
+  opacity: 1;
+  animation: buttonGlow 1.5s infinite;
+}
+
+@keyframes buttonPulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 255, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 20px 10px rgba(0, 255, 255, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(0, 255, 255, 0);
+  }
+}
+
+@keyframes buttonGlow {
+  0% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.02);
+  }
+  100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+}`
+        }
+      </style>
     </div>
   );
 };
