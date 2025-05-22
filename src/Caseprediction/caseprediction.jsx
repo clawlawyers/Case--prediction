@@ -9,6 +9,7 @@ import { Link } from "react-router-dom";
 import { initParticlesEngine } from "@tsparticles/react";
 import { loadSlim } from "@tsparticles/slim";
 import Particles from "@tsparticles/react";
+import { motion } from "framer-motion";
 
 const CasePrediction = () => {
   const [init, setInit] = useState(false);
@@ -56,6 +57,7 @@ const CasePrediction = () => {
     }),
     []
   );
+  
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-teal-700 to-gray-900 text-white">
@@ -66,7 +68,7 @@ const CasePrediction = () => {
           style={{ zIndex: 0, pointerEvents: "none" }}
         />
       )}
-      
+
       <div className="relative z-10">
         <header className="py-4">
           <div className="w-full sm:w-[90%] mx-auto px-8 sm:px-6 lg:px-8">
@@ -75,9 +77,24 @@ const CasePrediction = () => {
         </header>
 
         <main className="flex flex-col items-center text-center pt-12">
+          <motion.div  
+          initial={{y:-30, opacity: 0,}}
+              whileInView={{ x: 0, y:0,opacity: 1,}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ amount: 0.1, once: true }}
+          >
           <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold mb-6 mx-2">
             Case Prediction
           </h1>
+          </motion.div>
+
+<motion.div
+initial={{y:50, opacity: 0,}}
+              whileInView={{ x: 0, y:0,opacity: 1,}}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ amount: 0.1, once: true }}
+>
+
 
           <p className="text-[16px] max-w-3xl sm:mx-6 mx-4">
             Analyze the strength of your case before stepping into the courtroom.
@@ -88,58 +105,87 @@ const CasePrediction = () => {
             case's probability of success. Make informed decisions with clarity
             and confidence.
           </p>
-
+</motion.div>
           <div className="w-[80%] grid grid-cols-1 sm:grid-cols-3 gap-12 mb-12 pt-8">
-            <div className="flex flex-col items-center">
+            <motion.div
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ x: 0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ amount: 0.1, once: true }}
+
+              className="flex flex-col items-center">
               <div className="w-14 h-14 text-teal-900 rounded-full flex justify-center items-center mb-2">
                 <img src={Detective} alt="Icon" className="w-12 h-12" />
               </div>
               <h3 className="text-[18px] font-bold">
                 Evidence & Witness Analysis
               </h3>
-              <div style={{width:"70%",paddingTop:"10px"}}>
+              <div style={{ width: "70%", paddingTop: "10px" }}>
                 <p className="text-[14px]">
                   Our AI reviews your evidence and witnesses, based on the court
                   where your case is filed, to show how strong they are
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="flex flex-col items-center">
+
+
+            <motion.div 
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ x: 0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              viewport={{ amount: 0.1, once: true }}
+
+            className="flex flex-col items-center">
               <div className="w-14 h-14 text-teal-900 rounded-full flex justify-center items-center mb-2">
                 <img src={Cost} alt="Icon" className="w-12 h-12" />
               </div>
               <h3 className="text-[18px] font-bold">Cost Estimation</h3>
-              <div style={{width:"70%",paddingTop:"10px"}}>
+              <div style={{ width: "70%", paddingTop: "10px" }}>
                 <p className="text-[14px]">
                   Find out the expected costs for your case, including filing fees,
                   lawyer charges, possible compensation & case complexity.
                 </p>
               </div>
-            </div>
+            </motion.div>
 
-            <div className="flex flex-col items-center">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0 }}
+              whileInView={{ x: 0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.6 }}
+              viewport={{ amount: 0.1, once: true }}
+
+            className="flex flex-col items-center">
               <div className="w-14 h-14 text-teal-900 rounded-full flex justify-center items-center mb-2">
                 <img src={Growth} alt="Icon" className="w-12 h-12" />
               </div>
               <h3 className="text-[18px] font-bold">Know Winning Possibility</h3>
-              <div style={{width:"70%",paddingTop:"10px"}}>
+              <div style={{ width: "70%", paddingTop: "10px" }}>
                 <p className="text-[14px]">
                   See a simple graph that shows how strong your case by analyzing
                   all the factors and get tips on whether you should proceed.
                 </p>
               </div>
-            </div>
+            </motion.div>
           </div>
 
+<motion.div
+ initial={{x:80,y:20,  opacity: 0, scale: 0.2 }}
+              whileInView={{ x: 0,y:0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.8 }}
+              viewport={{ amount: 0.1, once: true }}
+>
+
           <Link to="/input">
-            <button 
+            <button
               className="w-full max-w-[250px] sm:max-w-[280px] md:max-w-[480px] hover:opacity-95 border-2 border-transparent text-white px-4 py-2 sm:px-6 sm:py-3 rounded-[10px] mb-4 md:mt-6"
               style={{ borderImage: "linear-gradient(90deg, #00DDE5 0%, #00C37B 100%) 1" }}
             >
               Analyze Your Legal Case
             </button>
           </Link>
+</motion.div>
+
         </main>
       </div>
     </div>

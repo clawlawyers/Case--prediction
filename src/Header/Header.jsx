@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React from "react";
 import ClawLogo from "../assets/ClawLogo.png";
 import { useNavigate } from "react-router-dom";
 import HomeIcon from "@mui/icons-material/Home";
-
 
 const Navbar = () => {
   const navigate = useNavigate();
 
   return (
     <nav className="bg-gradient-to-r rounded-lg from-teal-600 to-teal-800 text-white shadow-md">
-      <div className=" w-6xl rounded-lg mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="w-6xl rounded-lg mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
@@ -18,26 +17,18 @@ const Navbar = () => {
             </a>
           </div>
 
-          {/* Mobile - Only Home Icon */}
-          <div className="md:hidden">
-            <button
-              onClick={() => navigate("/")}
-              className="text-white focus:outline-none bg-gradient-to-r from-teal-500 to-teal-700 px-6 py-2 rounded-lg shadow-md hover:from-teal-400 hover:to-teal-600"
-            >
+          {/* Responsive Home Button */}
+          <button
+            onClick={() => navigate("/")}
+            className="flex items-center bg-gradient-to-r from-teal-500 to-teal-700 px-4 py-2 rounded-lg shadow-md hover:from-teal-400 hover:to-teal-600"
+          >
+            {/* Show only icon on mobile */}
+            <span className="md:hidden">
               <HomeIcon fontSize="medium" />
-            </button>
-          </div>
-
-          {/* Desktop - Buttons */}
-          <div className="hidden md:flex space-x-4">
-            <button
-              onClick={() => navigate("/")}
-              className="bg-gradient-to-r from-teal-500 to-teal-700 px-6 py-2 rounded-lg shadow-md hover:from-teal-400 hover:to-teal-600"
-            >
-              Home
-            </button>
-          </div>
-
+            </span>
+            {/* Show text on desktop */}
+            <span className="hidden md:inline">Home</span>
+          </button>
         </div>
       </div>
     </nav>

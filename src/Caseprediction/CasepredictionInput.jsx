@@ -9,6 +9,7 @@ import { closeDialog } from "../features/Casedetails";
 import { resetEvidence } from "../features/EvidenceDetails";
 import { resetTestimony } from "../features/Testimony";
 import { Alert, CircularProgress } from "@mui/material";
+import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { setEvidence } from "../features/EvidenceDetails";
 
@@ -240,10 +241,10 @@ const CasePredictionInput = () => {
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    if (FinalEvidence.length === 0 && FinalTestimony === 0) {
-      alert("Please select at least one evidence or testimony");
-      return;
-    }
+    // if (FinalEvidence.length === 0 && FinalTestimony === 0) {
+    //   alert("Please select at least one evidence or testimony");
+    //   return;
+    // }
 
     try {
       // API call
@@ -316,9 +317,8 @@ const CasePredictionInput = () => {
   };
 
   const handleContinueToPrediction = async () => {
-    if (FinalEvidence.length === 0 && FinalTestimony.length === 0) {
-      toast.error("Add atleast one evidence or testimony to continue!");
-    } else {
+
+    
       setFinalLoading(true);
 
       const newStringArr = FinalEvidence.map(
@@ -380,7 +380,7 @@ const CasePredictionInput = () => {
         console.error("Error:", error);
         alert("An error occurred while predicting the case outcome.");
       }
-    }
+    
   };
   const handleCloseModal = () => {
     const shouldClose = window.confirm("Are you sure you want to close?");
@@ -402,7 +402,12 @@ const CasePredictionInput = () => {
       </header>
 
       {/* Main Content */}
-      <div className="flex items-center w-80% justify-center pt-4" >
+      <motion.div 
+      initial={{x:-80,y:20,  opacity: 0, scale: 0.8 }}
+              whileInView={{ x: 0,y:0, opacity: 1, scale: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+              viewport={{ amount: 0.1, once: true }}
+      className="flex items-center w-80% justify-center pt-4">
         {/* ..........................................................................................................................OUTER................ */}
         <div className="bg-teal-800 rounded-xl p-4 sm:p-8 w-11/12 max-w-7xl shadow-lg">
           {/* Title */}
@@ -574,7 +579,7 @@ const CasePredictionInput = () => {
           </div>
         </div>
         {/* ...............................................................................................OUTER.......................................................................... */}
-      </div>
+      </motion.div>
 
       {/* Dialog Box */}
       {isDialogOpen && (
@@ -613,11 +618,22 @@ const CasePredictionInput = () => {
               className="w-full bg-teal-700 text-white py-2 rounded-md hover:bg-teal-800 mt-4"
               onClick={handleContinueToPrediction}
             >
-              {FinalLoading ? (
+              {/* {FinalLoading ? (
                 <CircularProgress size={20} sx={{ color: "white" }} />
               ) : (
                 "Start Analyzing"
-              )}
+              )} */}
+
+{FinalLoading ? (
+  <div className="flex items-center justify-center gap-2">
+    <CircularProgress size={20} sx={{ color: "white" }} />
+    <span>Analyzing...</span>
+  </div>
+) : (
+  FinalEvidence.length === 0 && FinalTestimony.length === 0 
+    ? "Skip & Analyze" 
+    : "Start Analyzing"
+)}
             </button>
           </div>
 
